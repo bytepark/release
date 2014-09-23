@@ -14,3 +14,28 @@ The bytepark release manager is a Bash shell script that provides different ways
 ## Programm invocation
 
 The release manager when invoked without further arguments enters interactive mode.
+
+## Options
+
+By executing ./release.sh -h you receive the full list of options
+
+    bytepark release manager - %VERSION% 
+      Usage: release [OPTIONS]
+ 
+    When OPTIONS is omitted the release manager executes
+    in interactive mode, guiding the user in a step by step
+    wizard through the release.
+ 
+    Available options:
+ 	-m	the method to use [deploy,tarball,rpm,deb,dump]
+ 	-t	the target system
+ 	-b	optional git branch to release
+ 	-r	optional git tag to release
+ 
+ 	-f	direct execution (CAUTIOUS USE - no summary)
+ 	-d	include database dump (CAUTIOUS USE - database is moved)
+ 	-u	update repo server
+ 
+ 	-v	version
+ 	-h	help text
+
