@@ -1,0 +1,11 @@
+*.log
+*~
+.project
+.buildpath
+.settings
+.settings/*
+.vagrant
+.idea/*
+
+!.gitignore
+!empty
