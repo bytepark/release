@@ -364,9 +364,14 @@ function_setup_git() {
         exit 10
     fi
 
+    if [ -z ${REPOROOT} ]; then
+        fn_dialog_error "Variable \$REPOROOT is not set. Please add this to your release config. Example: git@github.com:bytepark/"
+        exit 13
+    fi
+
     # set the PROJECT VAR with correct name from repo
     PROJECT=${REPO}
-    GITREPO="ssh://elena.bytenetz.de/git/${REPO}.git"
+    GITREPO="${REPOROOT}${REPO}.git"
 
     function_ask_revision
 }
