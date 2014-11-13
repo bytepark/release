@@ -7,7 +7,7 @@
 .vagrant
 .idea/*
 
-.shunit*
+shunit*
 
 !.gitignore
 !empty

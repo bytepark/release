@@ -26,7 +26,7 @@ if [ "$BASE" = "/usr/bin" ]; then
         BASE=/var/release
 fi
 if [ "$BASE" = "/usr/local/bin" ]; then
-        BASE=/opt/bytepark-release
+        BASE=/opt/release
 fi
 
 # include functions and dialog methods as well as getopts
