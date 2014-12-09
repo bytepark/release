@@ -7,7 +7,10 @@ function_post_source() {
     # go to the temporary directory
     function_create_tempdir
 
-    OUTPUTFILE=${BUILDPATH}/${DATESHORT}_${PROJECT}_${RELEASETAG}.tar.gz
+    # set default tarball file name if it is not given
+    if [ -z $OUTPUTFILE ]; then
+        OUTPUTFILE=${BUILDPATH}/${DATESHORT}_${PROJECT}_${RELEASETAG}.tar.gz
+    fi
 }
 
 function_dispatch() {
@@ -26,7 +29,6 @@ function_dispatch() {
     # auto cleanup
     function_remove_releasefiles
 
-
     # create tarball
     fn_dialog_info "Creating tarball"
     # cd .. we didn't have a folder in tars until know
@@ -37,5 +39,5 @@ function_dispatch() {
     function_exists function_tarball_post && function_tarball_post
 
     fn_dialog_info "Moving tarball to project directory"
-    mv ${OUTPUTFILE} ${PROJECTPATH}/${PROJECT}
+    mv ${OUTPUTFILE} ${PROJECTPATH}
 }
