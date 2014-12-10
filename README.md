@@ -1,6 +1,9 @@
 release
 =======
 
+## Status
+[![alt text][2]][1]
+
 ## Introduction
 
 The bytepark release manager is a Bash shell script that provides different ways of deploying files. Currently the following methods are available:
@@ -10,6 +13,8 @@ The bytepark release manager is a Bash shell script that provides different ways
 * rpm - generates a rpm package
 * deb - generates a deb package
 * dump - the inversion of deploy (we get a live copy into our development setup)
+
+There is currently a dependency to "dialog" - in order to show interface widgets in interactive mode.
 
 ## Programm invocation
 
@@ -39,3 +44,6 @@ By executing ./release.sh -h you receive the full list of options
  	-v	version
  	-h	help text
 
+
+[1]: https://travis-ci.org/bytepark/release
+[2]: https://api.travis-ci.org/bytepark/release.svg (build status)
