@@ -4,4 +4,4 @@ before_script:
     - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.1.3.tgz" | tar zx
 
 script:
-    - bash test/basic_test.sh
+    - bash test/testsuite.sh
