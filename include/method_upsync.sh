@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #
-# script to do a deploy to a remote site
-# (c) bytepark GmbH, 2011
+# script to do a upsync to a remote site
+# (c) bytepark GmbH, 2015
 # v0.1
 function_post_source() {
     RSYNC_FILES_DIR="${CONFIG_DIR}/rsync"
@@ -44,7 +44,9 @@ function_dispatch() {
         SSHPORT=22
     fi
 
-    function_import_dumps
+    if [ ! -z $SKIP_IMPORT ]; then
+        function_import_dumps
+    fi
 
     fn_dialog_info "Upsyncing files..."
     cd ${UPSYNC_ROOT}

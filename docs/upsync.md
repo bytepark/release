@@ -22,6 +22,10 @@
     # int+
     RSYNC_DONT_DELETE_MORE_THAN=100
 
+    # set this var in order to *not* execute the function_import_dumps
+    # of your target release upsync configuration
+    SKIP_IMPORT=1
+
     UPSYNC_ROOT=$(pwd)/files
 
 ### custom release configuration vars
