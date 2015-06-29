@@ -11,9 +11,10 @@ METHOD_TARBALL=1
 METHOD_RPM=2
 METHOD_DEB=3
 METHOD_DUMP=4
+METHOD_UPSYNC=5
 
-METHODS=( deploy tarball rpm deb dump )
-METHOD_LABELS=( "Make a rsync deploy to a remote site", "Build a gzipped tarball", "Build a RPM Package", "Build a DEB Package", "Dump data from remote site" )
+METHODS=( deploy tarball rpm deb dump upsync )
+METHOD_LABELS=( "Make a rsync deploy to a remote site", "Build a gzipped tarball", "Build a RPM Package", "Build a DEB Package", "Dump data from remote site", "Upsync data to remote site" )
 
 #
 # functions for the release script
@@ -163,6 +164,10 @@ function_determine_available_configs() {
     then
         HAS_CONFIG_DUMP=true
     fi
+    if ls ${CONFIG_DIR}/upsync.*.conf > /dev/null 2>&1
+    then
+        HAS_CONFIG_UPSYNC=true
+    fi
 }
 
 #
@@ -197,6 +202,11 @@ function_whattodo() {
     if [ $HAS_CONFIG_DUMP ]; then
         TITLE=${METHOD_LABELS[${METHOD_DUMP}]}
         RADIOLIST="${RADIOLIST} ${METHOD_DUMP} \"${TITLE}\""
+        let METHOD_COUNT=${METHOD_COUNT}+1
+    fi
+    if [ $HAS_CONFIG_UPSYNC ]; then
+        TITLE=${METHOD_LABELS[${METHOD_UPSYNC}]}
+        RADIOLIST="${RADIOLIST} ${METHOD_UPSYNC} \"${TITLE}\""
         let METHOD_COUNT=${METHOD_COUNT}+1
     fi
     #read -s -n 1 -p ">" DOWHAT
