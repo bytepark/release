@@ -6,6 +6,7 @@
 .settings/*
 .vagrant
 .idea/*
+.release
 
 shunit*
 
