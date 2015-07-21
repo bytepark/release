@@ -8,7 +8,7 @@ release
 
 The bytepark release manager is a Bash shell script that provides different ways of deploying files. Currently the following methods are available:
 
-* deploy - syncronisation of the files from development (in house) with the target system
+* deploy - synchronisation of the files from development (in house) with the target system
 * tarball - generates a gzipped tarball
 * rpm - generates a rpm package
 * deb - generates a deb package
@@ -25,24 +25,24 @@ The release manager when invoked without further arguments enters interactive mo
 By executing ./release.sh -h you receive the full list of options
 
     bytepark release manager - %VERSION% 
-      Usage: release [OPTIONS]
+    Usage: release [OPTIONS]
  
     When OPTIONS is omitted the release manager executes
     in interactive mode, guiding the user in a step by step
     wizard through the release.
  
     Available options:
- 	-m	the method to use [deploy,tarball,rpm,deb,dump]
- 	-t	the target system
- 	-b	optional git branch to release
- 	-r	optional git tag to release
+    -m  the method to use [deploy,tarball,rpm,deb,dump] 
+    -t  the target system
+    -b  optional git branch to release
+    -r  optional git tag to release
  
- 	-f	direct execution (CAUTIOUS USE - no summary)
- 	-d	include database dump (CAUTIOUS USE - database is moved)
- 	-u	update repo server
+    -f  direct execution (CAUTIOUS USE - no summary)
+    -d  include database dump (CAUTIOUS USE - database is moved)
+    -u  update repo server
  
- 	-v	version
- 	-h	help text
+    -v  version
+    -h  help text
 
 
 [1]: https://travis-ci.org/bytepark/release

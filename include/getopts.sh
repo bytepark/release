@@ -1,5 +1,7 @@
+# issue
+GETOPT_ISSUE="bytepark release manager - ${SCRIPT_VERSION}"
 # Help text
-HELP="bytepark release manager - $VERSION
+GETOPT_HELP="${GETOPT_ISSUE}\n
 \n
 Usage: release [OPTIONS]\n
 \n
@@ -18,21 +20,20 @@ Available options:\n
 \t-u\tupdate repo server\n
 \n
 \t-v\tversion\n
-\t-h\thelp text\n
-\n
+\t-h\thelp text
 "
 
-while getopts "vhdfm:t:b:u" OPTION
+while getopts "vhdfm:t:b:u" GETOPT_OPTION
 do
     BATCHMODE=1
-    case $OPTION in
+    case ${GETOPT_OPTION} in
         v)
-            echo -e ${VERSION}
-            exit
+            echo -e ${GETOPT_ISSUE}
+            exit 0
             ;;
         h)
-            echo -e ${HELP}
-            exit
+            echo -e ${GETOPT_HELP}
+            exit 0
             ;;
         m)
             METHOD_NAME=${OPTARG}
@@ -79,12 +80,12 @@ do
             UPDATEREPO="Yes"
             ;;
         \?)
-            echo "Invalid option: -${OPTION}.\nSee $0 -h for more information. Good bye."
-            exit
+            echo "Invalid option: -${GETOPT_OPTION}.\nSee $0 -h for more information."
+            exit 10
             ;;
         :)
-            echo "Option -${OPTION} requires an argument.\nSee $0 -h for more information. Good bye."
-            exit
+            echo "Option -${GETOPT_OPTION} requires an argument.\nSee $0 -h for more information."
+            exit 11
             ;;
     esac
 done

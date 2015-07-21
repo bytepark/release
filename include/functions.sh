@@ -1,71 +1,73 @@
+#!/usr/bin/env bash
 #
-# functions and constants for the release scipt
+# bytepark release manager - functions.sh
 #
+# (c) 2011-2015 bytepark GmbH
+#
+# Please see the README file for further information.
+# See the license information in the bundled LICENSE file.
+#
+# Global functions for the release script
 
 #
-# constants for the release script
+# Check for the needes tools of the release manager
 #
+checkTools() {
+    local tools=$1
+    local missing=""
 
-METHOD_DEPLOY=0
-METHOD_TARBALL=1
-METHOD_RPM=2
-METHOD_DEB=3
-METHOD_DUMP=4
-METHOD_UPSYNC=5
-
-METHODS=( deploy tarball rpm deb dump upsync )
-METHOD_LABELS=( "Make a rsync deploy to a remote site", "Build a gzipped tarball", "Build a RPM Package", "Build a DEB Package", "Dump data from remote site", "Upsync data to remote site" )
-
-#
-# functions for the release script
-#
-
-#
-# function to check for needed tools
-#
-function_check_tools() {
-    TOOLS='basename clear cut dirname expr find git getopts grep ls mkdir rm rsync sed ssh tr tac'
-
-    for prog in ${TOOLS}; do
+    for prog in ${tools}; do
         if [ ! `command -v ${prog}` ]; then
-            fn_dialog_error "Cannot run. Command ${prog} can not be found on your system."
-            exit
+            if [ -z ${missing} ]; then
+                missing="'${prog}'"
+            else
+                missing="${missing}, '${prog}'"
+            fi
         fi
     done
+
+    if [ ! -z "${missing}" ]; then
+        view_error "Tools missing. Please install ${missing} on your system."
+        exit 20
+    fi
 }
 
 #
 # method to determine the current os we are running on
 #
 # @sets OS
+# @sets OSPKG
 #
-function_determine_os() {
-    OS=""
-    OSPKG=""
-    grep "centos" /etc/issue -i -q
-    if [ $? = '0' ];then
-        OS="centos"
-        OSPKG="rpm"
+determineOs() {
+    local centosGrep="$(grep "centos" /etc/issue -i -q)"
+    if [ "$centosGrep" != "" -a $? -eq 0 ]; then
+        export OS="centos"
+        export OSPKG="rpm"
     fi
-    grep "fedora" /etc/issue -i -q
-    if [ $? = '0' ];then
-        OS="fedora"
-        OSPKG="rpm"
+    local fedoraGrep="$(grep "fedora" /etc/issue -i -q)"
+    if [ "$fedoraGrep" != "" -a $? -eq 0 ]; then
+        export OS="fedora"
+        export OSPKG="rpm"
     fi
-    grep "debian" /etc/issue -i -q
-    if [ $? = '0' ];then
-        OS="debian"
-        OSPKG="deb"
+    local debianGrep="$(grep "debian" /etc/issue -i -q)"
+    if [ "$debianGrep" != "" -a $? -eq 0 ]; then
+        export OS="debian"
+        export OSPKG="deb"
     fi
-    grep "ubuntu" /etc/issue -i -q
-    if [ $? = '0' ];then
-        OS="ubuntu"
-        OSPKG="deb"
+    local ubuntuGrep="$(grep "ubuntu" /etc/issue -i -q)"
+    if [ "$ubuntuGrep" != "" -a $? -eq 0 ]; then
+        export OS="ubuntu"
+        export OSPKG="deb"
     fi
-    grep "mint" /etc/issue -i -q
-    if [ $? = '0' ];then
-        OS="mint"
-        OSPKG="deb"
+    local mintGrep="$(grep "mint" /etc/issue -i -q)"
+    if [ "$mintGrep" != "" -a $? -eq 0 ]; then
+        export OS="mint"
+        export OSPKG="deb"
+    fi
+echo "OS: $OS, package format: $OSPKG"
+    if [ -z "$OS" -o -z "$OSPKG" ]; then
+        view_error "Operating system cannot be determined"
+        exit 21
     fi
 }
 
@@ -90,51 +92,16 @@ function_determine_projectname_and_paths() {
         MYPATH=`dirname ${MYPATH}`
     done
     if [ -z ${PROJECT} ]; then
-        fn_dialog_error "You are not in a project directory. Exiting."
-        exit 10
+        view_error "You are not in a project directory.\n\nAborting"
+        exit 21
     fi
     if [ -z ${CONFIG_DIR} ]; then
-        fn_dialog_error "No .release folder found. Exiting."
-        exit 11
+        view_error "No .release folder found.\n\nAborting"
+        exit 22
     fi
-    if [ ! "ls -A ${CONFIG_DIR}/*.conf" ]; then
-        fn_dialog_error "No config files in .release found. Exiting."
-        exit 12
-    fi
-}
-
-#
-# method to determine the type of project we are in
-#
-# able to recognize
-# - symfony 1.x
-# - symfony 2.x
-# - wordpress
-# - redaxo
-# - composer Component
-#
-# @sets $PROJECTTYPE
-#
-# @return void
-#
-function_determine_projecttype() {
-    if [ -f ${PROJECTPATH}/${PROJECT}/composer.json ]; then
-        PROJECTTYPE=composer
-    fi
-    if [ -f ${PROJECTPATH}/${PROJECT}/symfony ]; then
-        PROJECTTYPE=symfony
-    fi
-    if [ -f ${PROJECTPATH}/${PROJECT}/app/console.php ]; then
-        PROJECTTYPE=symfony2
-    fi
-    if [ -f ${PROJECTPATH}/${PROJECT}/application/Bootstrap.php ]; then
-        PROJECTTYPE=zend
-    fi
-    if [ -d ${PROJECTPATH}/${PROJECT}/web/rxadmin ]; then
-        PROJECTTYPE=redaxo
-    fi
-    if [ ! -n $PROJECTTYPE ]; then
-        PROJECTTYPE=unknown
+    if [ ! `ls -A ${CONFIG_DIR}/*.conf` ]; then
+        view_error "No release configurations files in .release.\n\nAborting"
+        exit 23
     fi
 }
 

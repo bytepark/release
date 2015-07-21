@@ -1,25 +1,50 @@
+#
+# bytepark release manager - view/dialog.sh
+#
+# (c) 2011-2015 bytepark GmbH
+#
+# Please see the README file for further information.
+# See the license information in the bundled LICENSE file.
+#
+# View implementation with the dialog tool
+#
+
+# template method map for public view api
+VIEW_ERROR='fn_dialog_error'
+VIEW_INFO='fn_dialog_info'
+VIEW_LIST='fn_dialog_radiolist'
+VIEW_MENU='fn_dialog_menubox'
+VIEW_YES_NO='fn_dialog_yesorno'
+VIEW_WAITING='fn_dialog_waitingbox'
+VIEW_PROGRESS='fn_dialog_progressbox'
+
 # methods for dialog rendering
 
 # cleanup
 rm -f /tmp/dialog_1_* &> /dev/null
 
-BACKTITLE="bytepark release manager ${VERSION} - ${USER}@${HOSTNAME}"
+BACKTITLE="bytepark release manager ${SCRIPT_VERSION} - ${USER}@${HOSTNAME}"
 data=/tmp/dialog_1_$$
 
 #
 # renders an error message as msgbox
 #
+# @param message
+#
 fn_dialog_error() {
-    if [ $BATCHMODE = 0 ]; then
+    if [ ${BATCHMODE} = 0 ]; then
         dialog --backtitle "${BACKTITLE}" --title "Error" --msgbox "$1" 12 76
+        clear
     fi
 }
 
 #
 # renders an info message as msgbox
 #
+# @param message
+#
 fn_dialog_info() {
-    if [ $BATCHMODE = 0 ]; then
+    if [ ${BATCHMODE} = 0 ]; then
         dialog --aspect 76 --backtitle "${BACKTITLE}" --title "Info" --infobox "$1" 0 0
         sleep 1
     fi
@@ -27,6 +52,10 @@ fn_dialog_info() {
 
 #
 # renders an radiolist
+#
+# @param
+# @param
+# @param
 #
 # @sets RETURN
 #
@@ -40,6 +69,11 @@ fn_dialog_radiolist() {
 
 #
 # renders an menubox
+#
+# @param
+# @param
+# @param
+# @param
 #
 # @sets RETURN
 #
@@ -59,6 +93,9 @@ fn_dialog_menubox() {
 #
 # renders a yes or no box
 #
+# @param
+# @param
+#
 # @sets RETURN
 #
 fn_dialog_yesorno() {
@@ -74,8 +111,11 @@ fn_dialog_yesorno() {
 #
 # renders a waiting box
 #
+# @param
+# @param
+#
 fn_dialog_waitingbox() {
-    if [ $BATCHMODE = 0 ]; then
+    if [ ${BATCHMODE} = 0 ]; then
         if [ "$2" ]; then
             LABEL=$2
         else
@@ -97,8 +137,11 @@ fn_dialog_waitingbox() {
 #
 # renders a progress box
 #
+# @param
+# @param
+#
 fn_dialog_progressbox() {
-    if [ $BATCHMODE = 0 ]; then
+    if [ ${BATCHMODE} = 0 ]; then
         if [ "$2" ]; then
             LABEL="$2"
         else

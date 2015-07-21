@@ -74,7 +74,7 @@ function_dispatch() {
         ARCHITECTURE="amd64"
     fi
 
-    /bin/sed -i "s/%VERSION%/${RELEASETAG}/" DEBIAN/control
+    /bin/sed -i "s/%SCRIPT_VERSION%/${RELEASETAG}/" DEBIAN/control
     /bin/sed -i "s/%ARCHITECTURE%/${ARCHITECTURE}/" DEBIAN/control
     # now move everything else
     chmod 755 ${APPROOT}/.release/debian/*
