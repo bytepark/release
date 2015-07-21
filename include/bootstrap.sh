@@ -23,7 +23,6 @@ REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir r
 . ${SCRIPT_INCLUDEPATH}/view.sh
 . ${SCRIPT_INCLUDEPATH}/functions.sh
 
-determineOs
 checkTools $REQUIRED_TOOLS
 function_determine_projectname_and_paths
 

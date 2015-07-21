@@ -22,10 +22,3 @@ setup() {
     [ $status -eq 20 ]
     [ $output = "Tools missing. Please install 'unknown_program' on your system." ]
 }
-
-@test "[functions] determineOs" {
-    run determineOs
-
-    [ $status -eq 0 ]
-    [ "$OS" = "debian" ]
-}

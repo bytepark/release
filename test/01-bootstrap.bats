@@ -9,7 +9,5 @@ setup() {
 }
 
 @test "[bootstrap] Variables are initialized after bootstrapping" {
-    [ "$OS" = "" ]
-    [ "$OSPKG" = "" ]
-    #skip "will have to find out how to check variables from loaded script"
+    skip "will have to find out how to check variables from loaded script"
 }

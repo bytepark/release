@@ -33,46 +33,6 @@ checkTools() {
 }
 
 #
-# method to determine the current os we are running on
-#
-# @sets OS
-# @sets OSPKG
-#
-determineOs() {
-    local centosGrep="$(grep "centos" /etc/issue -i -q)"
-    if [ "$centosGrep" != "" -a $? -eq 0 ]; then
-        export OS="centos"
-        export OSPKG="rpm"
-    fi
-    local fedoraGrep="$(grep "fedora" /etc/issue -i -q)"
-    if [ "$fedoraGrep" != "" -a $? -eq 0 ]; then
-        export OS="fedora"
-        export OSPKG="rpm"
-    fi
-    local debianGrep="$(grep "debian" /etc/issue -i -q)"
-    if [ "$debianGrep" != "" -a $? -eq 0 ]; then
-        export OS="debian"
-        export OSPKG="deb"
-    fi
-    local ubuntuGrep="$(grep "ubuntu" /etc/issue -i -q)"
-    if [ "$ubuntuGrep" != "" -a $? -eq 0 ]; then
-        export OS="ubuntu"
-        export OSPKG="deb"
-    fi
-    local mintGrep="$(grep "mint" /etc/issue -i -q)"
-    if [ "$mintGrep" != "" -a $? -eq 0 ]; then
-        export OS="mint"
-        export OSPKG="deb"
-    fi
-echo "OS: $OS, package format: $OSPKG"
-    if [ -z "$OS" -o -z "$OSPKG" ]; then
-        view_error "Operating system cannot be determined"
-        exit 21
-    fi
-}
-
-
-#
 # method to determine the project name
 #
 # @sets $PROJECT
