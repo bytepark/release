@@ -32,6 +32,13 @@ checkTools() {
     fi
 }
 
+checkTool() {
+    if [ ! `command -v ${1}` ]; then
+        return 1
+    fi
+
+    return 0
+}
 #
 # method to determine the project name
 #

@@ -9,5 +9,8 @@ setup() {
 }
 
 @test "[bootstrap] Variables are initialized after bootstrapping" {
-    skip "will have to find out how to check variables from loaded script"
+    [ $BATCHMODE -eq 0 ]
+    [ $FORCE -eq 0 ]
+    [ $DO_MYSQL_DUMP -eq 0 ]
+    [ "$ERRORLOG" = "/home/ts/workspace/release/release.errors.log" ]
 }
