@@ -1,9 +1,13 @@
 language: bash
 
-before_install:
-  - sudo add-apt-repository ppa:duggan/bats --yes
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq bats
+sudo: false
+
+addons:
+  apt:
+    sources:
+      ppa:duggan/bats
+    packages:
+      bats
 
 script:
   - bats test
