@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # bytepark release manager - view.sh
 #
@@ -32,7 +33,7 @@ if [ ! `command -v dialog` ]; then
     CONCRETE_VIEW="prompt"
 fi
 
-. ${SCRIPT_INCLUDEPATH}/view/${CONCRETE_VIEW}.sh
+. ${RELEASE_INCLUDEPATH}/view/${CONCRETE_VIEW}.sh
 
 view_error() {
     $VIEW_ERROR "$1"

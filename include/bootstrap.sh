@@ -16,16 +16,19 @@ BATCHMODE=0
 FORCE=0
 DO_MYSQL_DUMP=0
 ERRORLOG="$(pwd)/release.errors.log"
+#PROJECT=""
+#PROJECT_PATH=""
+#PROJECT_CONFIG_DIR=""
 
 REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir rm rsync sed ssh tr tac"
 
 # source the base functionality
-. ${SCRIPT_INCLUDEPATH}/view.sh
-. ${SCRIPT_INCLUDEPATH}/functions.sh
+. ${RELEASE_INCLUDEPATH}/view.sh
+. ${RELEASE_INCLUDEPATH}/functions.sh
 
-checkTools $REQUIRED_TOOLS
-function_determine_projectname_and_paths
+checkForTools $REQUIRED_TOOLS
+initializeProject
 
-. ${SCRIPT_INCLUDEPATH}/getopts.sh
-. ${SCRIPT_INCLUDEPATH}/method.sh
-. ${SCRIPT_INCLUDEPATH}/origin.sh
+. ${RELEASE_INCLUDEPATH}/getopts.sh
+. ${RELEASE_INCLUDEPATH}/method.sh
+. ${RELEASE_INCLUDEPATH}/origin.sh

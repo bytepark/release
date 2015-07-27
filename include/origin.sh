@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # bytepark release manager - origin.sh
 #

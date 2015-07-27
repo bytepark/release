@@ -13,27 +13,28 @@
 SCRIPT_VERSION="3.0.0-alpha-1"
 
 # where are we located
-SCRIPT_FILEPATH=`realpath $0`
-SCRIPT_PATH=`dirname ${SCRIPT_FILEPATH}`
-if [ "${SCRIPT_PATH}" = "/usr/bin" ]; then
-        SCRIPT_PATH=/var/release
+RELEASE_FILEPATH=`realpath $0`
+RELEASE_PATH=`dirname ${RELEASE_FILEPATH}`
+if [ "${RELEASE_PATH}" = "/usr/bin" ]; then
+        RELEASE_PATH=/var/release
 fi
-if [ "${SCRIPT_PATH}" = "/usr/local/bin" ]; then
-        SCRIPT_PATH=/opt/release
+if [ "${RELEASE_PATH}" = "/usr/local/bin" ]; then
+        RELEASE_PATH=/opt/release
 fi
-SCRIPT_INCLUDEPATH="${SCRIPT_PATH}/include"
+RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
 
 # bootstrap and base sourcing
-. ${SCRIPT_INCLUDEPATH}/bootstrap.sh
+. ${RELEASE_INCLUDEPATH}/bootstrap.sh
 
+# In batch mode, i.e. invocation with options
 if [ "${BATCHMODE}" = "1" ]; then
     BATCH_CONFIG_TO_USE="${METHOD_NAME}.${TARGET_NAME}.conf"
-    if [ ! -f ${CONFIG_DIR}/${BATCH_CONFIG_TO_USE} ]; then
+    if [ ! -f ${PROJECT_CONFIG_DIR}/${BATCH_CONFIG_TO_USE} ]; then
         echo "Release configuration ${BATCH_CONFIG_TO_USE} not found. Aborting."
         exit 12
     fi
 
-    . ${CONFIG_DIR}/${BATCH_CONFIG_TO_USE}
+    . ${PROJECT_CONFIG_DIR}/${BATCH_CONFIG_TO_USE}
 #else
 ## determine configured methods
 #    function_determine_available_configs

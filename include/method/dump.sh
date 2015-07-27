@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function_post_source() {
-    RSYNC_FILES_DIR="${CONFIG_DIR}/rsync"
+    RSYNC_FILES_DIR="${PROJECT_CONFIG_DIR}/rsync"
 
     # check whether a rsync_exclude exists
     if [ -z $RSYNC_EXCLUDE ] && [ -d "${RSYNC_FILES_DIR}" ]; then

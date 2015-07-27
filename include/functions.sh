@@ -9,42 +9,109 @@
 #
 # Global functions for the release script
 
+guardEmptyOrExitWithError() {
+    if [ ! -z "${1}" ]; then
+        view_error "${3}"
+        exit $2
+    fi
+
+    return 0
+}
+
+guardNonEmptyOrExitWithError() {
+    if [ -z "${1}" ]; then
+        view_error "${3}"
+        exit $2
+    fi
+
+    return 0
+}
+
+guardSuccessfulCallOrExitWithError() {
+   `${1} > /dev/null 2>&1`
+
+   if [ $? -ne 0 ]; then
+        view_error "${3}"
+        exit $2
+    fi
+
+    return 0
+}
+
 #
-# Check for the needes tools of the release manager
+# Checks if the given commands are present on the system
 #
-checkTools() {
-    local tools=$1
+# Exits with error code 20 when commands are not present
+#
+checkForTools() {
+    local commands=$1
     local missing=""
 
-    for prog in ${tools}; do
-        if [ ! `command -v ${prog}` ]; then
+    for command in ${commands}; do
+        checkForTool "${command}"
+        if [ $? -eq 1 ]; then
             if [ -z ${missing} ]; then
-                missing="'${prog}'"
+                missing="'${command}'"
             else
-                missing="${missing}, '${prog}'"
+                missing="${missing}, '${command}'"
             fi
         fi
     done
 
-    if [ ! -z "${missing}" ]; then
-        view_error "Tools missing. Please install ${missing} on your system."
-        exit 20
-    fi
+    guardEmptyOrExitWithError "${missing}" 20 "Tools missing. Please install ${missing} on your system."
+
+    return 0
 }
 
-checkTool() {
+#
+# Checks if the given command is present on the system
+#
+# @return 1 when command is not present, 0 otherwise
+#
+checkForTool() {
     if [ ! `command -v ${1}` ]; then
         return 1
     fi
 
     return 0
 }
+
+initializeProject() {
+    local currentPath="${PWD}"
+    local projectPath=""
+    parseProjectPath "${currentPath}" "${projectPath}"
+
+    guardNonEmptyOrExitWithError "${PROJECT}" 21 "You are not in a project directory.\n\nAborting"
+    guardNonEmptyOrExitWithError "${PROJECT_CONFIG_DIR}" 22 "No .release folder found.\n\nAborting"
+    guardSuccessfulCallOrExitWithError "echo ${PROJECT_CONFIG_DIR}/*.conf" 23 "No release configurations files in .release.\n\nAborting"
+
+    return 0
+}
+
+parseProjectPath() {
+    local path=$1
+    while [ "${path}" != "/" ]; do
+        if [ -d ${path}/.release ]; then
+           break
+        fi
+        path=`dirname ${path}`
+    done
+
+    PROJECT_PATH=${path}
+    PROJECT=`basename ${path}`
+    PROJECT_CONFIG_DIR="${path}/.release"
+
+    return 0
+}
+
+
+
 #
 # method to determine the project name
 #
 # @sets $PROJECT
-# @sets $PROJECTPATH
-# @sets $CONFIG_DIR
+# @sets $PROJECT_PATH
+# @sets $PROJECT_CONFIG_DIR
 #
 function_determine_projectname_and_paths() {
 
@@ -52,8 +119,8 @@ function_determine_projectname_and_paths() {
     while [ "${MYPATH}" != "/" ]; do
         if [ -d ${MYPATH}/.release ]; then
             PROJECT=`basename ${MYPATH}`
-            PROJECTPATH=${MYPATH}
-            CONFIG_DIR=${MYPATH}/.release
+            PROJECT_PATH=${MYPATH}
+            PROJECT_CONFIG_DIR=${MYPATH}/.release
         fi
 
         MYPATH=`dirname ${MYPATH}`
@@ -62,11 +129,11 @@ function_determine_projectname_and_paths() {
         view_error "You are not in a project directory.\n\nAborting"
         exit 21
     fi
-    if [ -z ${CONFIG_DIR} ]; then
+    if [ -z ${PROJECT_CONFIG_DIR} ]; then
         view_error "No .release folder found.\n\nAborting"
         exit 22
     fi
-    if [ ! `ls -A ${CONFIG_DIR}/*.conf` ]; then
+    if [ ! `ls -A ${PROJECT_CONFIG_DIR}/*.conf` ]; then
         view_error "No release configurations files in .release.\n\nAborting"
         exit 23
     fi
@@ -78,27 +145,27 @@ function_determine_projectname_and_paths() {
 #
 #
 function_determine_available_configs() {
-    if ls ${CONFIG_DIR}/deploy.*.conf > /dev/null 2>&1
+    if ls ${PROJECT_CONFIG_DIR}/deploy.*.conf > /dev/null 2>&1
     then
         HAS_CONFIG_DEPLOY=true
     fi
-    if ls ${CONFIG_DIR}/tarball.*.conf > /dev/null 2>&1
+    if ls ${PROJECT_CONFIG_DIR}/tarball.*.conf > /dev/null 2>&1
     then
         HAS_CONFIG_TARBALL=true
     fi
-    if ls ${CONFIG_DIR}/rpm.*.conf > /dev/null 2>&1
+    if ls ${PROJECT_CONFIG_DIR}/rpm.*.conf > /dev/null 2>&1
     then
         HAS_CONFIG_RPM=true
     fi
-    if ls ${CONFIG_DIR}/deb.*.conf > /dev/null 2>&1
+    if ls ${PROJECT_CONFIG_DIR}/deb.*.conf > /dev/null 2>&1
     then
         HAS_CONFIG_DEB=true
     fi
-    if ls ${CONFIG_DIR}/dump.*.conf > /dev/null 2>&1
+    if ls ${PROJECT_CONFIG_DIR}/dump.*.conf > /dev/null 2>&1
     then
         HAS_CONFIG_DUMP=true
     fi
-    if ls ${CONFIG_DIR}/upsync.*.conf > /dev/null 2>&1
+    if ls ${PROJECT_CONFIG_DIR}/upsync.*.conf > /dev/null 2>&1
     then
         HAS_CONFIG_UPSYNC=true
     fi
@@ -169,7 +236,7 @@ function_wheretogo() {
     TARGET_COUNT=0
     RADIOLIST=""
 
-    for FILE in $( ls -1 ${CONFIG_DIR}/${TARGET_PATTERN} | sed 's#.*/##' ); do
+    for FILE in $( ls -1 ${PROJECT_CONFIG_DIR}/${TARGET_PATTERN} | sed 's#.*/##' ); do
         TARGET_COUNT=`expr ${TARGET_COUNT} + 1`
         TITLE=`echo ${FILE} | cut -d "." -f2`
         RADIOLIST="${RADIOLIST} ${TARGET_COUNT} ${TITLE}"
@@ -207,7 +274,7 @@ function_source_config() {
         ERROR_MESSAGE="No target defined. Exiting.\n"
     fi
 
-    CONFIG_FILEPATH="${CONFIG_DIR}/${METHOD_NAME}.${TARGET_NAME}.conf"
+    CONFIG_FILEPATH="${PROJECT_CONFIG_DIR}/${METHOD_NAME}.${TARGET_NAME}.conf"
 
     if [ ! -f ${CONFIG_FILEPATH} ]; then
         ERROR_MESSAGE="Unavailable Target"
@@ -224,8 +291,8 @@ function_source_config() {
     source ${CONFIG_FILEPATH}
 
     # check if there is a hook definition file and source it
-    if [ -f ${CONFIG_DIR}/hooks.conf ]; then
-        source ${CONFIG_DIR}/hooks.conf
+    if [ -f ${PROJECT_CONFIG_DIR}/hooks.conf ]; then
+        source ${PROJECT_CONFIG_DIR}/hooks.conf
     fi
 }
 

@@ -19,7 +19,7 @@ function_post_source() {
     fi
 
     # exit if we do not find a .release/rpm folder
-    if [ ! -d ${CONFIG_DIR}/rpm ]; then
+    if [ ! -d ${PROJECT_CONFIG_DIR}/rpm ]; then
         fn_dialog_error "You do not have a rpm folder in your .release directory.\n\nThe release tool has changed some directory and file locations as well as some variable names.\nRefer to https://faq.bytenetz.de/development/release-tool/.\n\nAborting."
         exit
     fi
@@ -109,7 +109,7 @@ function_dispatch() {
 
         METHOD_CUSTOM_COMPLETE="\n\nThe rpm package ist published in the yum repository "
     else
-        mv ${BUILDPATH}/${RPMNAME}-${RELEASETAG}*.rpm ${PROJECTPATH}
+        mv ${BUILDPATH}/${RPMNAME}-${RELEASETAG}*.rpm ${PROJECT_PATH}
         METHOD_CUSTOM_COMPLETE="\n\nThe rpm package file is located in your current directory"
     fi
 }

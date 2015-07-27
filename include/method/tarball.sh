@@ -36,7 +36,7 @@ function_dispatch() {
     tar -c . | gzip -c > ${OUTPUTFILE}
 
     fn_dialog_info "Moving tarball to project directory"
-    mv ${OUTPUTFILE} ${PROJECTPATH}
+    mv ${OUTPUTFILE} ${PROJECT_PATH}
 
     #user func
     function_exists function_tarball_post && function_tarball_post

@@ -15,7 +15,7 @@ function_post_source() {
     fi
 
     # exit if we do not find a .release/debian folder
-    if [ ! -d ${CONFIG_DIR}/debian ]; then
+    if [ ! -d ${PROJECT_CONFIG_DIR}/debian ]; then
         fn_dialog_error "You do not have a .debian folder in your app root.\n\nThe release tool has changed some directory and file locations as well as some variable names.\nRefer to  https://faq.bytenetz.de/development/release-tool/.\n\nAborting."
         exit
     fi
@@ -117,7 +117,7 @@ function_dispatch() {
 
         METHOD_CUSTOM_COMPLETE="\n\nThe deb package ist published in the apt repository "
     else
-        mv ${DEBFILE} ${PROJECTPATH}
+        mv ${DEBFILE} ${PROJECT_PATH}
         METHOD_CUSTOM_COMPLETE="\n\nThe deb package file is located in your current directory"
     fi
 }

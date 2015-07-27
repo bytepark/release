@@ -6,6 +6,6 @@
 .settings/*
 .vagrant
 .idea/*
-.release
+/.release
 
 !.gitignore
