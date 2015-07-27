@@ -5,9 +5,10 @@
     RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
     CONCRETE_VIEW="prompt"
     load $BATS_TEST_DIRNAME/../include/bootstrap.sh
-echo $ERRORLOG
+    expected=`realpath "${BATS_TEST_DIRNAME}/release.errors.log"`
+
     [ $BATCHMODE -eq 0 ]
     [ $FORCE -eq 0 ]
     [ $DO_MYSQL_DUMP -eq 0 ]
-    [ "$ERRORLOG" = "/home/ts/workspace/release/test/release.errors.log" ]
+    [ "$ERRORLOG" = "${expected}" ]
 }

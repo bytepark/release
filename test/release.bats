@@ -4,10 +4,6 @@
 
     CONCRETE_VIEW="prompt"
     run bash -c "$BATS_TEST_DIRNAME/../release.sh -h"
-    echo $status
-echo "project: $PROJECT"
-echo "project path: $PROJECT_PATH"
-echo "project config dir: $PROJECT_CONFIG_DIR"
 
     [ $status = 0 ]
     [ "${lines[2]}" = " Usage: release [OPTIONS]" ]
