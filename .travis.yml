@@ -1,9 +1,4 @@
+sudo: false
+install: git clone --depth 1 https://github.com/sstephenson/bats.git
+script: PATH="./bats/bin:$PATH" test/run
 language: bash
-
-before_install:
-  - sudo add-apt-repository ppa:duggan/bats --yes
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq bats
-
-script:
-  - cd test && bash bats .
