@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-exec bats ${CI:+--tap} test
+exec cd test && bats ${CI:+--tap} .
