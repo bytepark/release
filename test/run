@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -e
-
-exec cd test && bats ${CI:+--tap} .
+pwd
+cd test
+exec bats ${CI:+--tap} .
