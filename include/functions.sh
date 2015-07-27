@@ -78,8 +78,7 @@ checkForTool() {
 
 initializeProject() {
     local currentPath="${PWD}"
-    local projectPath=""
-    parseProjectPath "${currentPath}" "${projectPath}"
+    parseProjectPath "${currentPath}"
 
     guardNonEmptyOrExitWithError "${PROJECT}" 21 "You are not in a project directory.\n\nAborting"
     guardNonEmptyOrExitWithError "${PROJECT_CONFIG_DIR}" 22 "No .release folder found.\n\nAborting"
@@ -96,6 +95,10 @@ parseProjectPath() {
         fi
         path=`dirname ${path}`
     done
+
+    if [ "/" = ${path} ]; then
+        return 1
+    fi
 
     PROJECT_PATH=${path}
     PROJECT=`basename ${path}`

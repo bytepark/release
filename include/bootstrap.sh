@@ -16,9 +16,9 @@ BATCHMODE=0
 FORCE=0
 DO_MYSQL_DUMP=0
 ERRORLOG="$(pwd)/release.errors.log"
-#PROJECT=""
-#PROJECT_PATH=""
-#PROJECT_CONFIG_DIR=""
+PROJECT=""
+PROJECT_PATH=""
+PROJECT_CONFIG_DIR=""
 
 REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir rm rsync sed ssh tr tac"
 

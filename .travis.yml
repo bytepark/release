@@ -6,4 +6,4 @@ before_install:
   - sudo apt-get install -qq bats
 
 script:
-  - cd test && bats .
+  - bash --version && cd test && bats .
