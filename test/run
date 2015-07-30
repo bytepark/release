@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -e
-pwd
+
 cd test
 exec bats ${CI:+--tap} .

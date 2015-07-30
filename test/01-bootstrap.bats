@@ -5,7 +5,7 @@
     RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
     CONCRETE_VIEW="prompt"
     load $BATS_TEST_DIRNAME/../include/bootstrap.sh
-    expected=`realpath "${BATS_TEST_DIRNAME}/release.errors.log"`
+    expected="$(cd $(dirname ${BATS_TEST_DIRNAME}); pwd)/release.errors.log"
 
     [ $BATCHMODE -eq 0 ]
     [ $FORCE -eq 0 ]

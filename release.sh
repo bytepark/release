@@ -13,8 +13,7 @@
 SCRIPT_VERSION="3.0.0-alpha-1"
 
 # where are we located
-RELEASE_FILEPATH=`realpath $0`
-RELEASE_PATH=`dirname ${RELEASE_FILEPATH}`
+RELEASE_PATH=$(cd $(dirname $0); pwd)
 if [ "${RELEASE_PATH}" = "/usr/bin" ]; then
         RELEASE_PATH=/var/release
 fi
