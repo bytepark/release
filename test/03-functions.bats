@@ -79,7 +79,7 @@ setup() {
 }
 
 @test "[functions] parseProjectPath returns error code 0 and populates the global variables when in a project" {
-    expectedProjectPath=$(realpath ${BATS_TEST_DIRNAME})
+    expectedProjectPath=$($cd $(dirmane ${BATS_TEST_DIRNAME}); pwd)
     expectedProject=$(basename ${expectedProjectPath})
     expectedProjectConfigDir="${expectedProjectPath}/.release"
 
