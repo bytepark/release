@@ -1,5 +1,7 @@
 #!/usr/bin/env bats
 
+load $BATS_TEST_DIRNAME/test_helper.sh
+
 setup() {
     RELEASE_PATH="${BATS_TEST_DIRNAME}/.."
     RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
@@ -11,72 +13,69 @@ setup() {
 @test "[functions] guardEmptyOrExitWithError returns 0 on success" {
     run guardEmptyOrExitWithError "" 1 "NON EMPTY"
 
-    [ $status -eq 0 ]
+    assert_success
 }
 
 @test "[functions] guardEmptyOrExitWithError exits with error code and message on guard failure" {
     run guardEmptyOrExitWithError "A" 1 "NON EMPTY"
 
-    [ $status -eq 1 ]
-    [ $output = "NON EMPTY" ]
+    assert_failure "NON EMPTY"
 }
 
 @test "[functions] guardNonEmptyOrExitWithError returns 0 on success" {
     run guardNonEmptyOrExitWithError "non empty" 1 "EMPTY"
 
-    [ $status -eq 0 ]
+    assert_success
 }
 
 @test "[functions] guardNonEmptyOrExitWithError exits with error code and message on guard failure" {
     run guardNonEmptyOrExitWithError "" 1 "EMPTY"
 
-    [ $status -eq 1 ]
-    [ $output = "EMPTY" ]
+    assert_failure "EMPTY"
 }
 
 @test "[functions] guardSuccessfulCallOrExitWithError returns 0 on success" {
     run guardSuccessfulCallOrExitWithError "ls" 1 "EXEC FAILED"
 
-    [ $status -eq 0 ]
+    assert_success
 }
 
 @test "[functions] guardSuccessfulCallOrExitWithError exits with error code and message on guard failure" {
     run guardSuccessfulCallOrExitWithError "ls-this-should-fail" 1 "EXEC FAILED"
 
-    [ $status -eq 1 ]
-    [ $output = "EXEC FAILED" ]
+    assert_failure "EXEC FAILED"
 }
 
 @test "[functions] checkForTool returns 0 when program is present " {
     run checkForTool "bats"
 
-    [ $status -eq 0 ]
+    assert_success
 }
 
 @test "[functions] checkForTool returns 1 when program is NOT present" {
     run checkForTool "unknown_program"
 
-    [ $status -eq 1 ]
+    assert_failure
 }
 
 @test "[functions] checkForTools returns with 0 when programs are present" {
     run checkForTools "bats bash"
 
-    [ $status -eq 0 ]
+    assert_success
 }
 
 @test "[functions] checkForTools exits with error code 20 and message when ONE program is NOT present" {
     run checkForTools "unknown_program bats"
 
-    [ $status -eq 20 ]
-    [ $output = "Tools missing. Please install 'unknown_program' on your system." ]
+    assert_status 20
+    assert_failure "Tools missing. Please install 'unknown_program' on your system."
 }
 
 @test "[functions] checkForTools exits with error code 20 and message when MORE programs are NOT present" {
     run checkForTools "unknown_program even_more_unknown_program"
 
-    [ $status -eq 20 ]
-    [ $output = "Tools missing. Please install 'unknown_program', 'even_more_unknown_program' on your system." ]
+    assert_status 20
+    assert_failure "Tools missing. Please install 'unknown_program', 'even_more_unknown_program' on your system."
 }
 
 @test "[functions] parseProjectPath returns error code 0 and populates the global variables when in a project" {
@@ -86,10 +85,10 @@ setup() {
 
     run parseProjectPath "${BATS_TEST_DIRNAME}"
 
-    [ $status -eq 0 ]
-    [ "$PROJECT_PATH" = "$expectedProjectPath" ]
-    [ "$PROJECT" = "$expectedProject" ]
-    [ "$PROJECT_CONFIG_DIR" = "$expectedProjectConfigDir" ]
+    assert_success
+    assert_equal "$PROJECT_PATH" "$expectedProjectPath"
+    assert_equal "$PROJECT" "$expectedProject"
+    assert_equal "$PROJECT_CONFIG_DIR" "$expectedProjectConfigDir"
  }
 
 
@@ -100,8 +99,8 @@ setup() {
 
     run parseProjectPath "/etc"
 
-    [ $status -eq 1 ]
-    [ "$PROJECT_PATH" = "" ]
-    [ "$PROJECT" = "" ]
-    [ "$PROJECT_CONFIG_DIR" = "" ]
+    assert_failure
+    assert_equal "$PROJECT_PATH" ""
+    assert_equal "$PROJECT" ""
+    assert_equal "$PROJECT_CONFIG_DIR" ""
 }
