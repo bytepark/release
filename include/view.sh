@@ -23,17 +23,17 @@
 # The view implentation have to reside in the view subdirectory
 #
 
-# Try dialog
-if [ -z ${CONCRETE_VIEW} ]; then
-    CONCRETE_VIEW="dialog"
+# Try dialog when view is not set
+if [ -z ${concreteView} ]; then
+    concreteView="dialog"
 fi
 
-# fallback to promt
+# fallback to prompt, dialog is not available
 if [ ! `command -v dialog` ]; then
-    CONCRETE_VIEW="prompt"
+    concreteView="prompt"
 fi
 
-. ${RELEASE_INCLUDEPATH}/view/${CONCRETE_VIEW}.sh
+. ${releaseIncludepath}/view/${concreteView}.sh
 
 view_error() {
     $VIEW_ERROR "$1"

@@ -12,8 +12,8 @@
 # Some global variables
 DATE=`/bin/date +"%d.%m.%Y %H:%M"`
 DATESHORT=`/bin/date +"%Y%m%d%H%M"`
-BATCHMODE=0
-FORCE=0
+inBatchMode=0
+inSilentMode=0
 DO_MYSQL_DUMP=0
 ERRORLOG="$(pwd)/release.errors.log"
 PROJECT=""
@@ -23,12 +23,16 @@ PROJECT_CONFIG_DIR=""
 REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir rm rsync sed ssh tr tac"
 
 # source the base functionality
-. ${RELEASE_INCLUDEPATH}/view.sh
-. ${RELEASE_INCLUDEPATH}/functions.sh
+. ${releaseIncludepath}/util.sh
+. ${releaseIncludepath}/view.sh
+. ${releaseIncludepath}/functions.sh
 
 checkForTools $REQUIRED_TOOLS
 initializeProject
 
-. ${RELEASE_INCLUDEPATH}/getopts.sh
-. ${RELEASE_INCLUDEPATH}/method.sh
-. ${RELEASE_INCLUDEPATH}/origin.sh
+. ${releaseIncludepath}/getopts.sh
+
+parseForOptions $@
+
+. ${releaseIncludepath}/method.sh
+. ${releaseIncludepath}/origin.sh

@@ -3,10 +3,10 @@
 load $BATS_TEST_DIRNAME/test_helper.sh
 
 setup() {
-    RELEASE_PATH="${BATS_TEST_DIRNAME}/.."
-    RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
+    releasePath="${BATS_TEST_DIRNAME}/.."
+    releaseIncludepath="${releasePath}/include"
 
-    CONCRETE_VIEW="prompt"
+    concreteView="prompt"
     load $BATS_TEST_DIRNAME/../include/bootstrap.sh
 }
 
@@ -105,14 +105,15 @@ setup() {
     assert_equal "$PROJECT_CONFIG_DIR" ""
 }
 
-@test "[functions] functionExists returns with 0 when the function exists" {
-    run functionExists checkForTool
+@test "[functions] loadConfiguration returns 0 on success" {
+    run loadConfiguration "deb" "test"
 
     assert_success
 }
 
-@test "[functions] functionExists returns with 1 when the function exists not" {
-    run functionExists veryNonExistingFunction
+@test "[functions] loadConfiguration exits with error code 12 and message on failure" {
+    run loadConfiguration "deb" "wrong-target"
 
-    assert_failure
+    assert_status 12
+    assert_failure "Release configuration 'deb.wrong-target.conf' not found. Aborting."
 }

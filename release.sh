@@ -20,70 +20,67 @@ else
 fi
 }
 
-# where are we located
-RELEASE_PATH=$(normalizedPath "$0")
-if [ "${RELEASE_PATH}" = "/usr/bin" ]; then
-        RELEASE_PATH=/var/release
-fi
-if [ "${RELEASE_PATH}" = "/usr/local/bin" ]; then
-        RELEASE_PATH=/opt/release
-fi
-RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
-
-# bootstrap and base sourcing
-. ${RELEASE_INCLUDEPATH}/bootstrap.sh
-
-# In batch mode, i.e. invocation with options
-if [ "${BATCHMODE}" = "1" ]; then
-    BATCH_CONFIG_TO_USE="${METHOD_NAME}.${TARGET_NAME}.conf"
-    if [ ! -f ${PROJECT_CONFIG_DIR}/${BATCH_CONFIG_TO_USE} ]; then
-        echo "Release configuration ${BATCH_CONFIG_TO_USE} not found. Aborting."
-        exit 12
+release() {
+    # where are we located
+    local releasePath=$(normalizedPath "$0")
+    if [ "${releasePath}" = "/usr/bin" ]; then
+            releasePath=/var/release
     fi
+    if [ "${releasePath}" = "/usr/local/bin" ]; then
+            releasePath=/opt/release
+    fi
+    local releaseIncludepath="${releasePath}/include"
+    local releaseMethod
+    local releaseTarget
 
-    . ${PROJECT_CONFIG_DIR}/${BATCH_CONFIG_TO_USE}
-#else
-## determine configured methods
-#    function_determine_available_configs
-#
-## function what to do (method)
-#    function_whattodo
-#
-## function where to go (target)
-#    function_wheretogo
-#
-## source the specific config (from .release)
-#    function_source_config
-fi
-#
-## function for git setup (tag/branch)
-#    function_setup_git
-#
-## source the needed method file (from include)
-#    function_source_method
-#
-## ask whether to make a mysql dump (question will only be asked if MYSQL_* config parameters are given)
-#    function_ask_for_mysql_dump
-#
-## show summary
-#if [ $FORCE = 0 ]; then
-#    function_summary
-#fi
-#
-## run mysql dump/import if DO_MYSQL_DUMP=1
-#if [ ${DO_MYSQL_DUMP} -eq 1 ]; then
-#    function_mysql_dump
-#fi
-#
-## and of we go (dispatch of sourced method)
-#functionExists function_dispatch && function_dispatch
-#
-## check if $ERRORLOG file exists and show it's content if it does.
-## exit process with a non-succesful return code.
-#function_show_errorlog ${BATCHMODE}
-#
-#fn_dialog_info "Release completed.${METHOD_CUSTOM_COMPLETE}"
-#sleep 3
-#clear
+    # bootstrap and base sourcing
+    . ${releaseIncludepath}/bootstrap.sh
 
-exit 0
+    # Not in batch mode, i.e. we have to ask for the method and target
+    if [ $inBatchMode -eq 0 ]; then
+        local availableMethods
+        local availableMethodCount
+        local availableTargets
+        local availableTargetCount
+        parseConfigurations
+        askForMethod
+        askForTarget
+    fi
+    ## source the specific config (from .release)
+    #    function_source_config
+#    loadConfiguration ${releaseMethod} ${releaseTarget}
+    #
+    ## function for git setup (tag/branch)
+    #    function_setup_git
+    #
+    ## source the needed method file (from include)
+    #    function_source_method
+    #
+    ## ask whether to make a mysql dump (question will only be asked if MYSQL_* config parameters are given)
+    #    function_ask_for_mysql_dump
+    #
+    ## show summary
+    #if [ $inSilentMode = 0 ]; then
+    #    function_summary
+    #fi
+    #
+    ## run mysql dump/import if DO_MYSQL_DUMP=1
+    #if [ ${DO_MYSQL_DUMP} -eq 1 ]; then
+    #    function_mysql_dump
+    #fi
+    #
+    ## and of we go (dispatch of sourced method)
+    #functionExists function_dispatch && function_dispatch
+    #
+    ## check if $ERRORLOG file exists and show it's content if it does.
+    ## exit process with a non-succesful return code.
+    #function_show_errorlog ${inBatchMode}
+    #
+    #fn_dialog_info "Release completed.${METHOD_CUSTOM_COMPLETE}"
+    #sleep 3
+    #clear
+
+    exit 0
+}
+
+release $@

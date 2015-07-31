@@ -26,7 +26,7 @@ VIEW_PROGRESS='fn_progress'
 # @param message
 #
 fn_error() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }
@@ -37,7 +37,7 @@ fn_error() {
 # @param message
 #
 fn_info() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }
@@ -48,7 +48,7 @@ fn_info() {
 # @param message
 #
 fn_list() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }
@@ -59,7 +59,7 @@ fn_list() {
 # @param message
 #
 fn_menu() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }
@@ -70,7 +70,7 @@ fn_menu() {
 # @param message
 #
 fn_yesno() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }
@@ -81,7 +81,7 @@ fn_yesno() {
 # @param message
 #
 fn_waiting() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }
@@ -92,7 +92,7 @@ fn_waiting() {
 # @param message
 #
 fn_progress() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         echo -e "$1"
     fi
 }

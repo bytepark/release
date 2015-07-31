@@ -3,14 +3,15 @@
 load $BATS_TEST_DIRNAME/test_helper.sh
 
 @test "[bootstrap] Variables are initialized after bootstrapping" {
-    RELEASE_PATH="${BATS_TEST_DIRNAME}/.."
-    RELEASE_INCLUDEPATH="${RELEASE_PATH}/include"
-    CONCRETE_VIEW="prompt"
+    releasePath="${BATS_TEST_DIRNAME}/.."
+    releaseIncludepath="${releasePath}/include"
+    concreteView="prompt"
     load $BATS_TEST_DIRNAME/../include/bootstrap.sh
-    expected="$(cd $(dirname ${BATS_TEST_DIRNAME}); pwd)/release.errors.log"
+    expectedPath=$(normalizedPath "${BATS_TEST_FILENAME}")
+    expected="${expectedPath}/release.errors.log"
 
-    assert_equal $BATCHMODE 0
-    assert_equal $FORCE 0
-    assert_equal $DO_MYSQL_DUMP 0
-    assert_equal "$ERRORLOG" "${expected}"
+    assert_equal 0 $inBatchMode
+    assert_equal 0 $inSilentMode
+    assert_equal 0 $DO_MYSQL_DUMP
+    assert_equal "${expected}" "$ERRORLOG"
 }

@@ -94,7 +94,7 @@ checkForTool() {
 initializeProject() {
     local currentPath="${PWD}"
     parseProjectPath "${currentPath}"
-functionExists "checkForTool"
+
     guardNonEmptyOrExitWithError "${PROJECT}" 21 "You are not in a project directory.\n\nAborting"
     guardNonEmptyOrExitWithError "${PROJECT_CONFIG_DIR}" 22 "No .release folder found.\n\nAborting"
     guardSuccessfulCallOrExitWithError "echo ${PROJECT_CONFIG_DIR}/*.conf" 23 "No release configurations files in .release.\n\nAborting"
@@ -108,6 +108,8 @@ functionExists "checkForTool"
 # @sets PROJECT_PATH
 # @sets PROJECT
 # @sets PROJECT_CONFIG_DIR
+#
+# @return 1 on failure, 0 otherwise
 #
 parseProjectPath() {
     local path="$1"
@@ -130,19 +132,71 @@ parseProjectPath() {
     return 0
 }
 
-functionExists() {
-    if [ "$(type -t $1)" == "function" ]; then
-        return 0
+#
+# Loads the release configuration definied by given values
+#
+# @param method
+# @param target
+#
+loadConfiguration() {
+    local method=$1
+    local target=$2
+    local configFile="${method}.${target}.conf"
+    if [ ! -f ${PROJECT_CONFIG_DIR}/${configFile} ]; then
+        view_error "Release configuration '${configFile}' not found. Aborting."
+        exit 12
     fi
 
-    return 1
+    . ${PROJECT_CONFIG_DIR}/${configFile}
+}
+
+#
+# parses the configuration files
+#
+parseConfigurations() {
+    local configFileName
+    local currentMethod
+    local currentTarget
+    local currentMethodKey
+    local currentMethodName
+    local currentMethodLabel
+
+    for configFileName in $( ls -1 ${PROJECT_CONFIG_DIR}/*.conf | sed 's#.*/##' | sed 's#\.conf##' ); do
+        local configPartsArray=($(echo "${configFileName}" | tr "\." " "))
+        currentMethod=${configPartsArray[0]}
+        currentTarget=${configPartsArray[1]}
+
+        methodHaystack=$(echo ${METHODS[@]})
+        inArray "${methodName}" "$methodHaystack"
+        if [ $? -ne 0 ]; then
+            view_error "Unavailable method '${methodName}'. Aborting"
+            exit 24
+        fi
+
+        declare methodvariable="METHOD_$(toUpper ${currentMethod})"
+        currentMethodKey=${!methodvariable}
+        currentMethodName=${METHODS[${!methodvariable}]}
+        currentMethodLabel=${METHOD_LABELS[${!methodvariable}]}
+    done
+}
+
+#
+#
+#
+askForMethod() {
+    return 0
+}
+
+#
+#
+#
+askForTarget() {
+    return 0
 }
 
 
 
-
-
-
+####### OLD CODE FROM HERE ON
 #
 # determines the available config files
 #
@@ -174,6 +228,9 @@ function_determine_available_configs() {
         HAS_CONFIG_UPSYNC=true
     fi
 }
+
+
+
 
 #
 # finds out what we should do
@@ -231,12 +288,12 @@ function_whattodo() {
 #        fi
     fi
 
-    METHOD_NAME="${METHODS[${DOWHAT}]}"
+    releaseMethod="${METHODS[${DOWHAT}]}"
 }
 
 
 function_wheretogo() {
-    TARGET_PATTERN="${METHOD_NAME}.*.conf"
+    TARGET_PATTERN="${releaseMethod}.*.conf"
     TARGET_COUNT=0
     RADIOLIST=""
 
@@ -271,21 +328,21 @@ function_wheretogo() {
 
 function_source_config() {
     ERROR_MESSAGE=""
-    if [ -z ${METHOD_NAME} ]; then
+    if [ -z ${releaseMethod} ]; then
         ERROR_MESSAGE="No method defined. Exiting.\n"
     fi
     if [ -z ${TARGET_NAME} ]; then
         ERROR_MESSAGE="No target defined. Exiting.\n"
     fi
 
-    CONFIG_FILEPATH="${PROJECT_CONFIG_DIR}/${METHOD_NAME}.${TARGET_NAME}.conf"
+    CONFIG_FILEPATH="${PROJECT_CONFIG_DIR}/${releaseMethod}.${TARGET_NAME}.conf"
 
     if [ ! -f ${CONFIG_FILEPATH} ]; then
         ERROR_MESSAGE="Unavailable Target"
     fi
 
     if [ $ERROR_MESSAGE ]; then
-        if [ $BATCHMODE = 1 ]; then
+        if [ $inBatchMode = 1 ]; then
             echo -e ${ERROR_MESSAGE}
         else
             fn_dialog_error ${ERROR_MESSAGE}
@@ -305,18 +362,18 @@ function_source_config() {
 #
 function_source_method() {
     ERROR_MESSAGE=""
-    if [ -z ${METHOD_NAME} ]; then
+    if [ -z ${releaseMethod} ]; then
         ERROR_MESSAGE="No method defined. Exiting.\n"
     fi
 
-    METHOD_FILEPATH="${BASE}/include/method_${METHOD_NAME}.sh"
+    METHOD_FILEPATH="${BASE}/include/method_${releaseMethod}.sh"
 
     if [ ! -f ${METHOD_FILEPATH} ]; then
         ERROR_MESSAGE="Unavailable method Exiting.\n"
     fi
 
     if [ $ERROR_MESSAGE ]; then
-        if [ $BATCHMODE = 1 ]; then
+        if [ $inBatchMode = 1 ]; then
             echo -e ${ERROR_MESSAGE}
         else
             fn_dialog_error ${ERROR_MESSAGE}
@@ -392,7 +449,7 @@ function_setup_git() {
 }
 
 function_ask_revision() {
-    if [ $BATCHMODE = 0 ]; then
+    if [ $inBatchMode = 0 ]; then
         if [ -z "${GITBRANCH}" ]; then
             fn_dialog_menubox "Branch or tag release?" 2 "0 \"HEAD of a branch\" 1 Tag"
             REVISION_TARGET=${RETURN}

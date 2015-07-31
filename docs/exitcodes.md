@@ -18,10 +18,14 @@ The release manager can exit with several codes
 
 20 When tools are missing on the system
 21 When the call is not made in a project directory
-22 
-23
+22 When no .release folder is found
+23 When no release configurations are present in the .release folder
+24 When a not supported method is specified
 
-## Old map
+
+
+
+## Old map - DEPRECATED
 
 10	not in a project directory
 11	no release config dir found

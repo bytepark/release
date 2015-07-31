@@ -31,7 +31,7 @@ assert_failure() {
 }
 
 assert_status() {
-    assert_equal "$status" "$1"
+    assert_equal "$1" "$status"
 }
 
 assert_equal() {
@@ -92,7 +92,7 @@ path_without() {
   local found alt util
   for found in $(which -a "$exe"); do
     found="${found%/*}"
-    if [ "$found" != "${RELEASE_PATH}/mock" ]; then
+    if [ "$found" != "${releasePath}/mock" ]; then
       alt="${BATS_TEST_DIRNAME}/$(echo "${found#/}" | tr '/' '-')"
       mkdir -p "$alt"
       for util in bash head cut readlink greadlink; do

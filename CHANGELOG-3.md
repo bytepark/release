@@ -4,9 +4,11 @@
 
 The following global scope variable names were changed
 
-    Old             New
+    Old                        New
     
-    VERSION         RELEASE_VERSION
-    PROJECTTYPE     -
-    SCRIPT_FILEPATH -
-    BASE            RELEASE_PATH
+    VERSION                    RELEASE_VERSION
+    PROJECTTYPE                -
+    SCRIPT_FILEPATH            -
+    BASE                       releasePath
+    BATCHMODE                  inBatchMode
+    FORCE                      inSilentMode

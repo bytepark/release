@@ -32,7 +32,7 @@ data=/tmp/dialog_1_$$
 # @param message
 #
 fn_dialog_error() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         dialog --backtitle "${BACKTITLE}" --title "Error" --msgbox "$1" 12 76
         clear
     fi
@@ -44,7 +44,7 @@ fn_dialog_error() {
 # @param message
 #
 fn_dialog_info() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         dialog --aspect 76 --backtitle "${BACKTITLE}" --title "Info" --infobox "$1" 0 0
         sleep 1
     fi
@@ -115,7 +115,7 @@ fn_dialog_yesorno() {
 # @param
 #
 fn_dialog_waitingbox() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         if [ "$2" ]; then
             LABEL=$2
         else
@@ -141,7 +141,7 @@ fn_dialog_waitingbox() {
 # @param
 #
 fn_dialog_progressbox() {
-    if [ ${BATCHMODE} = 0 ]; then
+    if [ ${inBatchMode} = 0 ]; then
         if [ "$2" ]; then
             LABEL="$2"
         else
