@@ -229,9 +229,6 @@ function_determine_available_configs() {
     fi
 }
 
-
-
-
 #
 # finds out what we should do
 #
@@ -366,7 +363,7 @@ function_source_method() {
         ERROR_MESSAGE="No method defined. Exiting.\n"
     fi
 
-    METHOD_FILEPATH="${BASE}/include/method_${releaseMethod}.sh"
+    METHOD_FILEPATH="${releaseIncludePath}/method/${METHOD_NAME}.sh"
 
     if [ ! -f ${METHOD_FILEPATH} ]; then
         ERROR_MESSAGE="Unavailable method Exiting.\n"
@@ -745,4 +742,43 @@ function_show_errorlog() {
 
     fn_dialog_progressbox "cat ${ERRORLOG}" "Errors or warnings occured during release."
     exit 1
+}
+
+executeIfFileExists() {
+    executeIfExists "$1" "$2" "file"
+    return $?
+}
+
+executeIfDirExists() {
+    executeIfExists "$1" "$2" "dir"
+    return $?
+}
+
+executeIfExists() {
+
+    OPTION=""
+    ERROR_CODE=""
+    case "$3" in
+        file)
+            OPTION="-f"
+            ERROR_CODE="50"
+            ;;
+        dir)
+            OPTION="-d"
+            ERROR_CODE="51"
+            ;;
+        :)
+
+            ;;
+    esac
+
+    if [ ! $OPTION "${PROJECT_PATH}/${2}" ]; then
+        OBJECT="$(tr '[:lower:]' '[:upper:]' <<< ${3:0:1})${3:1}"
+        echo "Could not execute \"${1}\". ${OBJECT} \"${PROJECT_PATH}/${2}\" does not exist." >> ${ERRORLOG}
+        exit $ERROR_CODE;
+    fi
+
+    eval "$1"
+
+    return $?
 }

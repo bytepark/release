@@ -22,10 +22,12 @@ The release manager can exit with several codes
 23 When no release configurations are present in the .release folder
 24 When a not supported method is specified
 
+### Execute checks
 
+50 File not found
+51 Directory not found
 
-
-## Old map - DEPRECATED
+## Old map
 
 10	not in a project directory
 11	no release config dir found

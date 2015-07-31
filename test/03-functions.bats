@@ -117,3 +117,41 @@ setup() {
     assert_status 12
     assert_failure "Release configuration 'deb.wrong-target.conf' not found. Aborting."
 }
+
+@test "[functions] executeIfFileExists executes command if file exists" {
+    FILE="foo"
+    touch $FILE
+
+    run executeIfFileExists "echo 'Hello World'" $FILE
+
+    rm $FILE
+
+    assert_success
+    assert_equal "$output" "Hello World"
+}
+
+@test "[functions] executeIfDirExists executes command if directory exists" {
+    DIR="foo"
+    mkdir $DIR
+
+    run executeIfDirExists "echo 'Hello World'" $DIR
+
+    rm -r $DIR
+
+    assert_success
+    assert_equal "$output" "Hello World"
+}
+
+@test "[functions] executeIfFileExists does not execute command if file does not exist" {
+    run executeIfFileExists "echo 'Hello World'" "unknown_file"
+
+    assert_status 50
+    assert_equal "$output" ""
+}
+
+@test "[functions] executeIfDirExists does not execute command if dir does not exist" {
+    run executeIfDirExists "echo 'Hello World'" "unknown_dir"
+
+    assert_status 51
+    assert_equal "$output" ""
+}
