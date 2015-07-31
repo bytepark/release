@@ -6,6 +6,7 @@ The following global scope variable names were changed
 
     Old             New
     
-    VERSION         SCRIPT_VERSION
+    VERSION         RELEASE_VERSION
     PROJECTTYPE     -
-    
+    SCRIPT_FILEPATH -
+    BASE            RELEASE_PATH

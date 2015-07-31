@@ -23,7 +23,7 @@ function_post_source() {
 
 function_dispatch() {
     #user func
-    function_exists function_rsync_pre && function_rsync_pre
+    functionExists function_rsync_pre && function_rsync_pre
 
     # dump TODO includes/excludes
     # check whether a rsync_exclude/rsync_include exists
@@ -38,5 +38,5 @@ function_dispatch() {
     fn_dialog_progressbox "rsync -q --delete ${OPT_RSYNC_EXCLUDE} -az -e \"ssh -p ${SSHPORT}\" $SSHUSER@$SSHHOST:$REMOTEPATH ."
 
     #user func
-    function_exists function_rsync_post && function_rsync_post
+    functionExists function_rsync_post && function_rsync_post
 }

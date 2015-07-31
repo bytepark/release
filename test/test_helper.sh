@@ -1,3 +1,11 @@
+normalizedPath() {
+if [ -h $1 ]; then
+    echo $(cd $(dirname $(readlink $1)); pwd)
+else
+    echo $(cd $(dirname $1); pwd)
+fi
+}
+
 flunk() {
   { if [ "$#" -eq 0 ]; then cat -
     else echo "$@"

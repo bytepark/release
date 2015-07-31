@@ -79,8 +79,8 @@ setup() {
 }
 
 @test "[functions] parseProjectPath returns error code 0 and populates the global variables when in a project" {
-    expectedProjectPath=$($cd $(dirmane ${BATS_TEST_DIRNAME}); pwd)
-    expectedProject=$(basename ${expectedProjectPath})
+    expectedProjectPath=$(normalizedPath "$BATS_TEST_FILENAME")
+    expectedProject=$(basename "$expectedProjectPath")
     expectedProjectConfigDir="${expectedProjectPath}/.release"
 
     run parseProjectPath "${BATS_TEST_DIRNAME}"
@@ -103,4 +103,16 @@ setup() {
     assert_equal "$PROJECT_PATH" ""
     assert_equal "$PROJECT" ""
     assert_equal "$PROJECT_CONFIG_DIR" ""
+}
+
+@test "[functions] functionExists returns with 0 when the function exists" {
+    run functionExists checkForTool
+
+    assert_success
+}
+
+@test "[functions] functionExists returns with 1 when the function exists not" {
+    run functionExists veryNonExistingFunction
+
+    assert_failure
 }

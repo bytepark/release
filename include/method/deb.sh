@@ -36,7 +36,7 @@ function_post_source() {
 
 function_dispatch() {
     #user func hook
-    function_exists function_clone_pre && function_clone_pre
+    functionExists function_clone_pre && function_clone_pre
 
     # export the current trunk
     mkdir -p debian/DEBIAN
@@ -47,7 +47,7 @@ function_dispatch() {
     function_git_dispatch "debian/${APPROOT}"
 
     #user func hook
-    function_exists function_clone_post && function_clone_post
+    functionExists function_clone_post && function_clone_post
 
     # no more git after here
     function_remove_gitfiles
@@ -90,7 +90,7 @@ function_dispatch() {
     cd ${BUILDPATH}
 
     #user hook deb_pre
-    function_exists function_deb_pre && function_deb_pre
+    functionExists function_deb_pre && function_deb_pre
 
     # packaging
     gzip --best debian/usr/share/doc/${DEBNAME}/changelog
@@ -101,7 +101,7 @@ function_dispatch() {
     mv debian.deb ${DEBFILE}
 
     #user func
-    function_exists function_deb_post && function_deb_post
+    functionExists function_deb_post && function_deb_post
 
     # copy the package to bytepark debian repo host
     if [ "${UPDATEREPO}" = "Yes" ]; then

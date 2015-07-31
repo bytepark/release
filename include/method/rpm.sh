@@ -48,7 +48,7 @@ function_post_source() {
 function_dispatch() {
 
     # user func hook
-    function_exists function_clone_pre && function_clone_pre
+    functionExists function_clone_pre && function_clone_pre
 
     # get the repo
     function_git_dispatch "${RPMNAME}-${RELEASETAG}"
@@ -66,7 +66,7 @@ function_dispatch() {
     # @todo - exit if no CHANGELOG found
 
     #user func hook
-    function_exists function_clone_post && function_clone_post
+    functionExists function_clone_post && function_clone_post
 
     # no more git after here
     function_remove_gitfiles
@@ -83,7 +83,7 @@ function_dispatch() {
     fn_dialog_waitingbox "tar -c ${RPMNAME}-${RELEASETAG} | gzip -c > ${OUTPUTFILE}" "Creating tarball for rpm build"
 
     # user func hook
-    function_exists function_tarball_post && function_tarball_post
+    functionExists function_tarball_post && function_tarball_post
 
     # check for rpm build location
     if [ ${BUILD_HOST} ]; then

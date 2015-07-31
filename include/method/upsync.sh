@@ -27,14 +27,14 @@ function_post_source() {
 
 function_dispatch() {
     # user func
-    function_exists function_upsync_pre && function_upsync_pre
+    functionExists function_upsync_pre && function_upsync_pre
 
     if [ -z $UPSYNC_ROOT ]; then
         fn_dialog_error "You must specify a UPSYNC_ROOT in order to properly transfer the files to the upsync target!"
         exit
     fi
 
-    if [ -z $SKIP_IMPORT && ! function_exists function_import_dumps ]; then
+    if [ -z $SKIP_IMPORT && ! functionExists function_import_dumps ]; then
         fn_dialog_error "Please implement a function_import_dumps or set SKIP_IMPORT=1 in your release config!"
         exit
     fi
@@ -102,7 +102,7 @@ function_dispatch() {
     fi
 
     # user func
-    function_exists function_upsync_post && function_upsync_post
+    functionExists function_upsync_post && function_upsync_post
 
     cd $MYPATH
 }

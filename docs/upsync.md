@@ -54,7 +54,7 @@
 
     function_import_dumps() {
         # user func
-        function_exists function_import_dumps_pre && function_import_dumps_pre
+        functionExists function_import_dumps_pre && function_import_dumps_pre
 
         fn_dialog_info "Re-initializing the PHPCR..."
         ssh $SSHUSER@$SSHHOST "cd ${REMOTEPATH}; app/console --env=stage doctrine:phpcr:repository:init"
@@ -67,7 +67,7 @@
         ssh $SSHUSER@$SSHHOST "cd ${REMOTEPATH}; mysql -u${DB_USER} -p${DB_PASSWORD} -h${DB_HOST} ${DB_NAME} < ${SQL_DUMP_NAME}.sql"
 
         # user func
-        function_exists function_import_dumps_post && function_import_dumps_post
+        functionExists function_import_dumps_post && function_import_dumps_post
     }
 
 ## Post-import
