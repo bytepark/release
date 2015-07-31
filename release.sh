@@ -52,7 +52,7 @@ fi
 #    function_setup_git
 #
 ## source the needed method file (from include)
-#    function_source_method
+function_source_method
 #
 ## ask whether to make a mysql dump (question will only be asked if MYSQL_* config parameters are given)
 #    function_ask_for_mysql_dump
@@ -78,4 +78,5 @@ fi
 #sleep 3
 #clear
 
+function_exists function_clone_post && function_clone_post
 exit 0

@@ -21,6 +21,11 @@ The release manager can exit with several codes
 22 
 23
 
+### Execute checks
+
+50 File not found
+51 Directory not found
+
 ## Old map
 
 10	not in a project directory

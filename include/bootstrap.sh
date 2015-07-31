@@ -29,6 +29,7 @@ REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir r
 checkForTools $REQUIRED_TOOLS
 initializeProject
 
-. ${RELEASE_INCLUDEPATH}/getopts.sh
 . ${RELEASE_INCLUDEPATH}/method.sh
+. ${RELEASE_INCLUDEPATH}/getopts.sh
+
 . ${RELEASE_INCLUDEPATH}/origin.sh
