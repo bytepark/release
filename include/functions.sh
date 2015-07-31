@@ -9,6 +9,10 @@
 #
 # Global functions for the release script
 
+#
+# Checks the first parameter for emptyness and exits with the given
+# error code and message on failing
+#
 guardEmptyOrExitWithError() {
     if [ ! -z "${1}" ]; then
         view_error "${3}"
@@ -18,6 +22,10 @@ guardEmptyOrExitWithError() {
     return 0
 }
 
+#
+# Checks the first parameter for non-emptyness and exits with the given
+# error code and message on failing
+#
 guardNonEmptyOrExitWithError() {
     if [ -z "${1}" ]; then
         view_error "${3}"
@@ -27,6 +35,10 @@ guardNonEmptyOrExitWithError() {
     return 0
 }
 
+#
+# Executes the first parameter and exits with the given
+# error code and message on failing
+#
 guardSuccessfulCallOrExitWithError() {
    `${1} > /dev/null 2>&1`
 
@@ -69,17 +81,20 @@ checkForTools() {
 # @return 1 when command is not present, 0 otherwise
 #
 checkForTool() {
-    if [ ! `command -v ${1}` ]; then
+    if [ ! $(command -v ${1}) ]; then
         return 1
     fi
 
     return 0
 }
 
+#
+# Initializes the basic project settings
+#
 initializeProject() {
     local currentPath="${PWD}"
     parseProjectPath "${currentPath}"
-
+functionExists "checkForTool"
     guardNonEmptyOrExitWithError "${PROJECT}" 21 "You are not in a project directory.\n\nAborting"
     guardNonEmptyOrExitWithError "${PROJECT_CONFIG_DIR}" 22 "No .release folder found.\n\nAborting"
     guardSuccessfulCallOrExitWithError "echo ${PROJECT_CONFIG_DIR}/*.conf" 23 "No release configurations files in .release.\n\nAborting"
@@ -87,13 +102,21 @@ initializeProject() {
     return 0
 }
 
+#
+# Parses the given path for release configurations and sets the needed variables
+#
+# @sets PROJECT_PATH
+# @sets PROJECT
+# @sets PROJECT_CONFIG_DIR
+#
 parseProjectPath() {
-    local path=$1
+    local path="$1"
+
     while [ "${path}" != "/" ]; do
         if [ -d ${path}/.release ]; then
            break
         fi
-        path=`dirname ${path}`
+        path=$(dirname "${path}")
     done
 
     if [ "/" = ${path} ]; then
@@ -101,46 +124,24 @@ parseProjectPath() {
     fi
 
     PROJECT_PATH=${path}
-    PROJECT=`basename ${path}`
+    PROJECT=$(basename "${path}")
     PROJECT_CONFIG_DIR="${path}/.release"
 
     return 0
 }
 
-
-
-#
-# method to determine the project name
-#
-# @sets $PROJECT
-# @sets $PROJECT_PATH
-# @sets $PROJECT_CONFIG_DIR
-#
-function_determine_projectname_and_paths() {
-
-    MYPATH=`pwd`
-    while [ "${MYPATH}" != "/" ]; do
-        if [ -d ${MYPATH}/.release ]; then
-            PROJECT=`basename ${MYPATH}`
-            PROJECT_PATH=${MYPATH}
-            PROJECT_CONFIG_DIR=${MYPATH}/.release
-        fi
-
-        MYPATH=`dirname ${MYPATH}`
-    done
-    if [ -z ${PROJECT} ]; then
-        view_error "You are not in a project directory.\n\nAborting"
-        exit 21
+functionExists() {
+    if [ "$(type -t $1)" == "function" ]; then
+        return 0
     fi
-    if [ -z ${PROJECT_CONFIG_DIR} ]; then
-        view_error "No .release folder found.\n\nAborting"
-        exit 22
-    fi
-    if [ ! `ls -A ${PROJECT_CONFIG_DIR}/*.conf` ]; then
-        view_error "No release configurations files in .release.\n\nAborting"
-        exit 23
-    fi
+
+    return 1
 }
+
+
+
+
+
 
 #
 # determines the available config files
@@ -324,7 +325,7 @@ function_source_method() {
 
     source ${METHOD_FILEPATH}
 
-    function_exists function_post_source && function_post_source
+    functionExists function_post_source && function_post_source
 }
 
 #
@@ -513,10 +514,6 @@ function_remove_releasefiles() {
     rm -f phpunit.xml.dist
 }
 
-function_exists() {
-    type -t $1 | grep -q 'function'
-}
-
 function_mysqldump() {
     fn_dialog_info -n "Making MySQL dump ..."
     # dump the local db
@@ -614,24 +611,24 @@ function_git_dispatch() {
     cd $1
 
     # hook for master branch actions before branch pull
-    function_exists method_pre_gitbranch_pull && method_pre_gitbranch_pull
+    functionExists method_pre_gitbranch_pull && method_pre_gitbranch_pull
 
     if [ -n "${GITREVISION_BRANCH}" -a "master" != "${GITREVISION}" ]; then
         fn_dialog_progressbox "git checkout -b ${GITREVISION} origin/${GITREVISION}" "Pulling branch ${GITREVISION}"
     fi
 
     # hook for master branch actions after branch pull
-    function_exists method_post_gitbranch_pull && method_post_gitbranch_pull
+    functionExists method_post_gitbranch_pull && method_post_gitbranch_pull
 
 
     if [ ${GITREVISION_TAG} ]; then
         # hook for master branch actions before tag checkout
-        function_exists method_pre_gittag_checkout && method_pre_gittag_checkout
+        functionExists method_pre_gittag_checkout && method_pre_gittag_checkout
 
         fn_dialog_progressbox "git checkout ${GITREVISION}" "Checkout of tag ${GITREVISION}"
 
         # hook for master branch actions after tag checkout
-        function_exists method_post_gittag_checkout && method_post_gittag_checkout
+        functionExists method_post_gittag_checkout && method_post_gittag_checkout
     fi
 }
 

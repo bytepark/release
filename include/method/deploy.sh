@@ -30,13 +30,13 @@ function_post_source() {
 
 function_dispatch() {
     #user func hook
-    function_exists function_clone_pre && function_clone_pre
+    functionExists function_clone_pre && function_clone_pre
 
     # get the repo
     function_git_dispatch "${RELEASETAG}"
 
     #user func hook
-    function_exists function_clone_post && function_clone_post
+    functionExists function_clone_post && function_clone_post
 
     # delete gitconfigs
     function_remove_gitfiles
@@ -89,5 +89,5 @@ function_dispatch() {
     fi
 
     #user func
-    function_exists function_rsync_post && function_rsync_post
+    functionExists function_rsync_post && function_rsync_post
 }

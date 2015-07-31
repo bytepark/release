@@ -10,10 +10,18 @@
 # Started 07/2011 as a rsync wrapper script ;-)
 #
 
-SCRIPT_VERSION="3.0.0-alpha-1"
+RELEASE_VERSION="3.0.0-alpha-1"
+
+normalizedPath() {
+if [ -h $1 ]; then
+    echo $(cd $(dirname $(readlink $1)); pwd)
+else
+    echo $(cd $(dirname $1); pwd)
+fi
+}
 
 # where are we located
-RELEASE_PATH=$(cd $(dirname $0); pwd)
+RELEASE_PATH=$(normalizedPath "$0")
 if [ "${RELEASE_PATH}" = "/usr/bin" ]; then
         RELEASE_PATH=/var/release
 fi
@@ -68,7 +76,7 @@ function_source_method
 #fi
 #
 ## and of we go (dispatch of sourced method)
-#function_exists function_dispatch && function_dispatch
+#functionExists function_dispatch && function_dispatch
 #
 ## check if $ERRORLOG file exists and show it's content if it does.
 ## exit process with a non-succesful return code.
