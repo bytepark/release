@@ -16,4 +16,4 @@ METHOD_DUMP=4
 METHOD_UPSYNC=5
 
 METHODS=( deploy tarball rpm deb dump upsync )
-METHOD_LABELS=( "Make a rsync deploy to a remote site", "Build a gzipped tarball", "Build a RPM Package", "Build a DEB Package", "Dump data from remote site", "Upsync data to remote site" )
+METHOD_LABELS=( "Make a rsync deploy to a remote site" "Build a gzipped tarball" "Build a RPM Package" "Build a DEB Package" "Dump data from remote site" "Upsync data to remote site" )

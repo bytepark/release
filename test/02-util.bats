@@ -29,8 +29,8 @@ load $BATS_TEST_DIRNAME/../include/util.sh
 
 @test "[util] inArray returns 0 when needle is in haystack" {
     needle="one"
-    anArray=(one two three)
-    haystack=$(echo ${anArray}[@])
+    anArray=( one two three )
+    haystack=$(echo ${anArray[@]})
     run inArray "$needle" "$haystack"
 
     assert_status 0
@@ -38,8 +38,8 @@ load $BATS_TEST_DIRNAME/../include/util.sh
 
 @test "[util] inArray returns 1 when needle is not in haystack" {
     needle="four"
-    anArray=(one two three)
-    haystack=$(echo ${anArray}[@])
+    anArray=( one two three )
+    haystack=$(echo ${anArray[@]})
     run inArray "$needle" "$haystack"
 
     assert_status 1

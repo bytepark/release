@@ -153,10 +153,9 @@ loadConfiguration() {
 #
 # parses the configuration files
 #
-parseConfigurations() {
+parseConfiguredMethods() {
     local configFileName
     local currentMethod
-    local currentTarget
     local currentMethodKey
     local currentMethodName
     local currentMethodLabel
@@ -164,10 +163,9 @@ parseConfigurations() {
     for configFileName in $( ls -1 ${PROJECT_CONFIG_DIR}/*.conf | sed 's#.*/##' | sed 's#\.conf##' ); do
         local configPartsArray=($(echo "${configFileName}" | tr "\." " "))
         currentMethod=${configPartsArray[0]}
-        currentTarget=${configPartsArray[1]}
-
         methodHaystack=$(echo ${METHODS[@]})
-        inArray "${methodName}" "$methodHaystack"
+        inArray "${currentMethod}" "$methodHaystack"
+
         if [ $? -ne 0 ]; then
             view_error "Unavailable method '${methodName}'. Aborting"
             exit 24
@@ -177,6 +175,12 @@ parseConfigurations() {
         currentMethodKey=${!methodvariable}
         currentMethodName=${METHODS[${!methodvariable}]}
         currentMethodLabel=${METHOD_LABELS[${!methodvariable}]}
+
+        inArray "${currentMethodKey}" "$availableMethods"
+        if [ $? -ne 0 ]; then
+            availableMethods="$availableMethods ${currentMethodKey} \"${currentMethodLabel}\""
+            let availableMethodCount=${availableMethodCount}+1
+        fi
     done
 }
 
@@ -184,7 +188,35 @@ parseConfigurations() {
 #
 #
 askForMethod() {
-    return 0
+    local methodCount=$1
+    local methods=$2
+    local methodKey
+
+    if [ "${methodCount}" -eq 1 ]; then
+        methodKey=`echo ${methods[@]} | cut -d " " -f1`
+    else
+        view_menu "What do you want to do today?" ${methodCount} "$methods"
+        methodKey=$RETURN
+        if [[ ! $methodKey =~ ^[0-9]+$ ]]; then
+            view_error "Unsupported menu choice"
+            exit 30
+        fi
+    fi
+
+    releaseMethod=${METHODS[$methodKey]}
+}
+
+#
+#
+#
+parseTargetsForMethod() {
+    local method="$1"
+    local targetName
+
+    for targetName in $( ls -1 ${PROJECT_CONFIG_DIR}/${method}.*.conf | sed 's#.*/##' | sed 's#\.conf##' | cut -d "." -f2 ); do
+        let availableTargetCount=${availableTargetCount}+1
+        availableTargets="${availableTargets} ${availableTargetCount} ${targetName}"
+    done
 }
 
 #
@@ -197,38 +229,6 @@ askForTarget() {
 
 
 ####### OLD CODE FROM HERE ON
-#
-# determines the available config files
-#
-#
-#
-function_determine_available_configs() {
-    if ls ${PROJECT_CONFIG_DIR}/deploy.*.conf > /dev/null 2>&1
-    then
-        HAS_CONFIG_DEPLOY=true
-    fi
-    if ls ${PROJECT_CONFIG_DIR}/tarball.*.conf > /dev/null 2>&1
-    then
-        HAS_CONFIG_TARBALL=true
-    fi
-    if ls ${PROJECT_CONFIG_DIR}/rpm.*.conf > /dev/null 2>&1
-    then
-        HAS_CONFIG_RPM=true
-    fi
-    if ls ${PROJECT_CONFIG_DIR}/deb.*.conf > /dev/null 2>&1
-    then
-        HAS_CONFIG_DEB=true
-    fi
-    if ls ${PROJECT_CONFIG_DIR}/dump.*.conf > /dev/null 2>&1
-    then
-        HAS_CONFIG_DUMP=true
-    fi
-    if ls ${PROJECT_CONFIG_DIR}/upsync.*.conf > /dev/null 2>&1
-    then
-        HAS_CONFIG_UPSYNC=true
-    fi
-}
-
 #
 # finds out what we should do
 #

@@ -44,21 +44,21 @@ view_info() {
 }
 
 view_list() {
-    $VIEW_LIST "$1 $2 $3"
+    $VIEW_LIST "$1" "$2" "$3"
 }
 
 view_menu() {
-    $VIEW_MENU "$1 $2 $3 $4"
+    $VIEW_MENU "$1" "$2" "$3" "$4"
 }
 
 view_yes_no() {
-    $VIEW_YES_NO "$1 $2"
+    $VIEW_YES_NO "$1" "$2"
 }
 
 view_waiting() {
-    $VIEW_WAITING "$1 $2"
+    $VIEW_WAITING "$1" "$2"
 }
 
 view_progress() {
-    $VIEW_PROGRESS "$1 $2"
+    $VIEW_PROGRESS "$1" "$2"
 }

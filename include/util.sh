@@ -48,11 +48,14 @@ toUpper() {
 #
 inArray() {
     local needle=$1
-    local haystack=( `echo "$2"` )
-    local replacedHaystack=`echo "${haystack[@]##$1}"`
-    if [ "${haystack}" == "${replacedHaystack}" ]; then
-        return 1
-    fi
+    local haystack=( $(echo "$2") )
+    local element
 
-    return 0
+    for element in ${haystack[@]}; do
+        if [ "${element}" == "${needle}" ]; then
+            return 0
+        fi
+    done
+
+    return 1
 }

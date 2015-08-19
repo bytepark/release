@@ -42,9 +42,17 @@ release() {
         local availableMethodCount
         local availableTargets
         local availableTargetCount
-        parseConfigurations
-        askForMethod
-        askForTarget
+        parseConfiguredMethods
+        local availableMethodsArray=$(echo ${availableMethods[@]})
+        askForMethod "${availableMethodCount}" "$availableMethodsArray"
+        parseTargetsForMethod ${releaseMethod}
+        askForTarget ${availableTargets} ${availableTargetCount}
+echo ${availableMethods}
+echo ${availableMethodCount}
+echo ${availableTargets}
+echo ${availableTargetCount}
+echo ${releaseMethod}
+echo ${releaseTarget}
     fi
     ## source the specific config (from .release)
     #    function_source_config

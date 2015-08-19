@@ -78,6 +78,13 @@ fn_dialog_radiolist() {
 # @sets RETURN
 #
 fn_dialog_menubox() {
+echo "#### DIALOG ####"
+echo $1
+echo $2
+echo $3
+echo $4
+echo "#### DIALOG ####"
+echo ""
     if [ -n "${4}" ]; then
         SIZE="${4}"
     else

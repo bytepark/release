@@ -22,6 +22,10 @@ The release manager can exit with several codes
 23 When no release configurations are present in the .release folder
 24 When a not supported method is specified
 
+### View
+
+30 When unsuspected menu choice is returned from view
+
 ### Execute checks
 
 50 File not found
