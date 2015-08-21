@@ -46,17 +46,11 @@ release() {
         local availableMethodsArray=$(echo ${availableMethods[@]})
         askForMethod "${availableMethodCount}" "$availableMethodsArray"
         parseTargetsForMethod ${releaseMethod}
-        askForTarget ${availableTargets} ${availableTargetCount}
-echo ${availableMethods}
-echo ${availableMethodCount}
-echo ${availableTargets}
-echo ${availableTargetCount}
-echo ${releaseMethod}
-echo ${releaseTarget}
+        local availableTargetsArray=$(echo ${availableTargets[@]})
+        askForTarget "${availableTargetCount}" "${availableTargets}"
     fi
-    ## source the specific config (from .release)
-    #    function_source_config
-#    loadConfiguration ${releaseMethod} ${releaseTarget}
+    ## load the project secific configuration (from .release)
+    loadConfiguration ${releaseMethod} ${releaseTarget}
     #
     ## function for git setup (tag/branch)
     #    function_setup_git

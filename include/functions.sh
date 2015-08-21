@@ -144,10 +144,15 @@ loadConfiguration() {
     local configFile="${method}.${target}.conf"
     if [ ! -f ${PROJECT_CONFIG_DIR}/${configFile} ]; then
         view_error "Release configuration '${configFile}' not found. Aborting."
-        exit 12
+        exit 40
     fi
 
     . ${PROJECT_CONFIG_DIR}/${configFile}
+
+    if [ -z $RELEASE_CONFIG_VERSION ]; then
+        view_error "Deprecated. RTFM for the update of your configuration."
+        exit 41
+    fi
 }
 
 #
@@ -223,136 +228,31 @@ parseTargetsForMethod() {
 #
 #
 askForTarget() {
-    return 0
+    local targetCount=$1
+    local targets=$2
+    local targetKey
+    local targetsArray=( `echo "$2"` )
+
+    if [ "${targetCount}" -eq 1 ]; then
+        targetKey=1
+    else
+        view_menu "What is the target system?" ${targetCount} "$targets"
+        targetKey=$RETURN
+        if [[ ! $targetKey =~ ^[0-9]+$ ]]; then
+            view_error "Unsupported menu choice"
+            exit 30
+        fi
+    fi
+    releaseTarget=${targetsArray[$targetKey]}
 }
+
+
+
 
 
 
 ####### OLD CODE FROM HERE ON
-#
-# finds out what we should do
-#
-# @sets $DOWHAT
-#
-function_whattodo() {
-    # find out what we want to do
-    RADIOLIST=""
-    METHOD_COUNT=0
-    if [ $HAS_CONFIG_DEPLOY ]; then
-        TITLE=${METHOD_LABELS[${METHOD_DEPLOY}]}
-        RADIOLIST="${RADIOLIST} ${METHOD_DEPLOY} \"${TITLE}\""
-        let METHOD_COUNT=${METHOD_COUNT}+1
-    fi
-    if [ $HAS_CONFIG_TARBALL ]; then
-        TITLE=${METHOD_LABELS[${METHOD_TARBALL}]}
-        RADIOLIST="${RADIOLIST} ${METHOD_TARBALL} \"${TITLE}\""
-        let METHOD_COUNT=${METHOD_COUNT}+1
-    fi
-    if [ $HAS_CONFIG_RPM ]; then
-        TITLE=${METHOD_LABELS[${METHOD_RPM}]}
-        RADIOLIST="${RADIOLIST} ${METHOD_RPM} \"${TITLE}\""
-        let METHOD_COUNT=${METHOD_COUNT}+1
-    fi
-    if [ $HAS_CONFIG_DEB ]; then
-        TITLE=${METHOD_LABELS[${METHOD_DEB}]}
-        RADIOLIST="${RADIOLIST} ${METHOD_DEB} \"${TITLE}\""
-        let METHOD_COUNT=${METHOD_COUNT}+1
-    fi
-    if [ $HAS_CONFIG_DUMP ]; then
-        TITLE=${METHOD_LABELS[${METHOD_DUMP}]}
-        RADIOLIST="${RADIOLIST} ${METHOD_DUMP} \"${TITLE}\""
-        let METHOD_COUNT=${METHOD_COUNT}+1
-    fi
-    if [ $HAS_CONFIG_UPSYNC ]; then
-        TITLE=${METHOD_LABELS[${METHOD_UPSYNC}]}
-        RADIOLIST="${RADIOLIST} ${METHOD_UPSYNC} \"${TITLE}\""
-        let METHOD_COUNT=${METHOD_COUNT}+1
-    fi
-    #read -s -n 1 -p ">" DOWHAT
 
-    if [ "${METHOD_COUNT}" = "1" ]; then
-        DOWHAT=`echo ${RADIOLIST} | cut -d " " -f1`
-    else
-        fn_dialog_menubox "What do you want to do today?" ${METHOD_COUNT} "$RADIOLIST"
-        DOWHAT=$RETURN
-        if [[ ! $DOWHAT =~ ^[0-9]+$ ]]; then
-            fn_dialog_info "\nGood bye."
-            exit 20
-        fi
-#        if [ ${DOWHAT} -lt 1 ] || [ ${DOWHAT} -gt ${#METHODS[@]} ]; then
-#            fn_dialog_info "\nGood bye."
-#            exit 20
-#        fi
-    fi
-
-    releaseMethod="${METHODS[${DOWHAT}]}"
-}
-
-
-function_wheretogo() {
-    TARGET_PATTERN="${releaseMethod}.*.conf"
-    TARGET_COUNT=0
-    RADIOLIST=""
-
-    for FILE in $( ls -1 ${PROJECT_CONFIG_DIR}/${TARGET_PATTERN} | sed 's#.*/##' ); do
-        TARGET_COUNT=`expr ${TARGET_COUNT} + 1`
-        TITLE=`echo ${FILE} | cut -d "." -f2`
-        RADIOLIST="${RADIOLIST} ${TARGET_COUNT} ${TITLE}"
-
-        CNF[${TARGET_COUNT}]=${TITLE}
-    done
-
-    if [ ${TARGET_COUNT} == 0 ]; then
-        fn_dialog_error "No config files found. Exiting.\n"
-        exit
-    fi
-
-    if [ ${TARGET_COUNT} = 1 ]; then
-        TARGET=1
-    else
-        fn_dialog_menubox "What is the target system?" $TARGET_COUNT "$RADIOLIST"
-        TARGET=${RETURN}
-    fi
-
-    if [ -z ${TARGET} ]; then
-        fn_dialog_error "Aborting.\n"
-        exit
-    fi
-
-    TARGET_NAME=${CNF[${TARGET}]}
-}
-
-
-function_source_config() {
-    ERROR_MESSAGE=""
-    if [ -z ${releaseMethod} ]; then
-        ERROR_MESSAGE="No method defined. Exiting.\n"
-    fi
-    if [ -z ${TARGET_NAME} ]; then
-        ERROR_MESSAGE="No target defined. Exiting.\n"
-    fi
-
-    CONFIG_FILEPATH="${PROJECT_CONFIG_DIR}/${releaseMethod}.${TARGET_NAME}.conf"
-
-    if [ ! -f ${CONFIG_FILEPATH} ]; then
-        ERROR_MESSAGE="Unavailable Target"
-    fi
-
-    if [ $ERROR_MESSAGE ]; then
-        if [ $inBatchMode = 1 ]; then
-            echo -e ${ERROR_MESSAGE}
-        else
-            fn_dialog_error ${ERROR_MESSAGE}
-        fi
-    fi
-
-    source ${CONFIG_FILEPATH}
-
-    # check if there is a hook definition file and source it
-    if [ -f ${PROJECT_CONFIG_DIR}/hooks.conf ]; then
-        source ${PROJECT_CONFIG_DIR}/hooks.conf
-    fi
-}
 
 #
 # function to source the correct method file

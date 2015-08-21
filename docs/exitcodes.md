@@ -26,6 +26,11 @@ The release manager can exit with several codes
 
 30 When unsuspected menu choice is returned from view
 
+### Configuration
+
+40 When specified configuration file is not found
+41 When configuration is deprecated
+
 ### Execute checks
 
 50 File not found
