@@ -153,6 +153,11 @@ loadConfiguration() {
         view_error "Deprecated. RTFM for the update of your configuration."
         exit 41
     fi
+
+    if [ -n $RELEASE_CONFIG_VERSION -a $RELEASE_CONFIG_VERSION -lt 3 ]; then
+        view_error "Deprecated. RTFM for the update of your configuration."
+        exit 41
+    fi
 }
 
 #

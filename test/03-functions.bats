@@ -106,15 +106,27 @@ setup() {
 }
 
 @test "[functions] loadConfiguration returns 0 on success" {
-    run loadConfiguration "deb" "test"
+    run loadConfiguration "deb" "test2"
 
     assert_success
 }
 
-@test "[functions] loadConfiguration exits with error code 12 and message on failure" {
+@test "[functions] loadConfiguration exits with error code 41 when an old release configuration is called" {
+    run loadConfiguration "deb" "test"
+
+    assert_status 41
+}
+
+@test "[functions] loadConfiguration exits with error code 41 when an old release configuration is called" {
+    run loadConfiguration "rpm" "test"
+
+    assert_status 41
+}
+
+@test "[functions] loadConfiguration exits with error code 40 and message on failure" {
     run loadConfiguration "deb" "wrong-target"
 
-    assert_status 12
+    assert_status 40
     assert_failure "Release configuration 'deb.wrong-target.conf' not found. Aborting."
 }
 
