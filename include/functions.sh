@@ -608,19 +608,17 @@ function_gitbranch() {
 }
 
 function_git_dispatch() {
-    if [ $GIT_PULL -eq 1 ]; then
-        cd $1
-        fn_dialog_progressbox "git pull 2>> ${ERRORLOG}" "Pulling repository"
-    else
+    if [ $GIT_PULL -eq 0 ]; then
         fn_dialog_progressbox "git clone "${GITREPO}" "$1" 2>> ${ERRORLOG}" "Cloning repository"
-        cd $1
     fi
+    cd $1
+    fn_dialog_progressbox "git fetch 2>> ${ERRORLOG}" "Fetching remote"
 
     # hook for master branch actions before branch pull
     function_exists method_pre_gitbranch_pull && method_pre_gitbranch_pull
 
     if [ -n "${GITREVISION_BRANCH}" -a "master" != "${GITREVISION}" ]; then
-        fn_dialog_progressbox "git checkout -b ${GITREVISION} origin/${GITREVISION}" "Pulling branch ${GITREVISION}"
+        fn_dialog_progressbox "git checkout ${GITREVISION}" "Checkout of branch ${GITREVISION}"
     fi
 
     # hook for master branch actions after branch pull
