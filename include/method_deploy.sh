@@ -41,7 +41,7 @@ function_dispatch() {
     function_exists function_build_workspace && function_build_workspace
 
     cp -R ${WORKSPACEPATH}/* ${DEPLOYPATH}
-    cd ${DEPLOYPATH}
+    cd "${DEPLOYPATH}/${RELEASETAG}"
 
     function_exists function_build_deploy && function_build_deploy
 

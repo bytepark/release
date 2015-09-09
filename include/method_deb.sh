@@ -52,7 +52,7 @@ function_dispatch() {
     function_exists function_build_workspace && function_build_workspace
 
     cp -R ${WORKSPACEPATH}/* ${DEPLOYPATH}
-    cd ${DEPLOYPATH}
+    cd "${DEPLOYPATH}/debian/${APPROOT}"
 
     function_exists function_build_deploy && function_build_deploy
 
