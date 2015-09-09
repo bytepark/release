@@ -474,20 +474,24 @@ function_mysql_dump() {
 #
 # creates a temporary directory
 #
-function_create_tempdir() {
-    FOLDER=temp_${USER}_${REPO}
+function_create_builddir() {
+    FOLDER=temp_${USER}_${REPO}_${TARGET_NAME}
+    WORKSPACEPATH="/tmp/${FOLDER}/workspace"
+    DEPLOYPATH="/tmp/${FOLDER}/build"
+
     cd /tmp/
 
     # delete old temp folder, if exists
-    if [ -d ${FOLDER} ]; then
-        rm -rf ${FOLDER}
+    if [ -d ${WORKSPACEPATH} ]; then
+        GIT_PULL=1
+        rm -Rf ${DEPLOYPATH}/*
+    else
+        GIT_PULL=0
+        mkdir -p ${WORKSPACEPATH}
+        mkdir -p ${DEPLOYPATH}
     fi
 
-    # create temp folder
-    mkdir -p ${FOLDER}
-    cd ${FOLDER}
-
-    BUILDPATH="/tmp/${FOLDER}"
+    cd ${WORKSPACEPATH}
 }
 
 #
@@ -604,10 +608,13 @@ function_gitbranch() {
 }
 
 function_git_dispatch() {
-    fn_dialog_progressbox "git clone "${GITREPO}" "$1" 2>> ${ERRORLOG}" "Cloning repository"
-
-    # prepare the app
-    cd $1
+    if [ $GIT_PULL -eq 1 ]; then
+        cd $1
+        fn_dialog_progressbox "git pull 2>> ${ERRORLOG}" "Pulling repository"
+    else
+        fn_dialog_progressbox "git clone "${GITREPO}" "$1" 2>> ${ERRORLOG}" "Cloning repository"
+        cd $1
+    fi
 
     # hook for master branch actions before branch pull
     function_exists method_pre_gitbranch_pull && method_pre_gitbranch_pull

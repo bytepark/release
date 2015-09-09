@@ -11,3 +11,5 @@ FAILURE
 
 20	no option selected
 
+98 When CONFIG_VERSION != 2 
+99 When no CONFIG_VERSION is set in the config

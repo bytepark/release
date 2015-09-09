@@ -65,6 +65,15 @@ else
     function_source_config
 fi
 
+# Check for workspace support in config
+if [ -z ${CONFIG_VERSION} ]; then
+    fn_dialog_error "Please update your configuration for use with the release tool. See README.md for changes"
+    exit 99
+elif [ ${CONFIG_VERSION} != '2' ]; then
+    fn_dialog_error "Please update your configuration for use with the release tool. See README.md for changes"
+    exit 98
+fi
+
 # function for git setup (tag/branch)
     function_setup_git
 

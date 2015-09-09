@@ -6,7 +6,7 @@
 # v0.1
 function_post_source() {
     # go to the temporary directory
-    function_create_tempdir
+    function_create_builddir
 
     RSYNC_FILES_DIR="${CONFIG_DIR}/rsync"
 
@@ -37,6 +37,13 @@ function_dispatch() {
 
     #user func hook
     function_exists function_clone_post && function_clone_post
+
+    function_exists function_build_workspace && function_build_workspace
+
+    cp -R ${WORKSPACEPATH}/* ${DEPLOYPATH}
+    cd ${DEPLOYPATH}
+
+    function_exists function_build_deploy && function_build_deploy
 
     # delete gitconfigs
     function_remove_gitfiles

@@ -31,7 +31,7 @@ function_post_source() {
     fi
 
     # go to the temporary directory
-    function_create_tempdir
+    function_create_builddir
 }
 
 function_dispatch() {
@@ -49,13 +49,20 @@ function_dispatch() {
     #user func hook
     function_exists function_clone_post && function_clone_post
 
+    function_exists function_build_workspace && function_build_workspace
+
+    cp -R ${WORKSPACEPATH}/* ${DEPLOYPATH}
+    cd ${DEPLOYPATH}
+
+    function_exists function_build_deploy && function_build_deploy
+
     # no more git after here
     function_remove_gitfiles
 
 
     fn_dialog_info "Preparing build"
     # move debian files
-    cd ${BUILDPATH}/debian
+    cd ${DEPLOYPATH}/debian
     # move everything else into their directories
     mv ${APPROOT}/.release/debian/files/* ./ 1> /dev/null 2>> ${ERRORLOG}
     rm -rf ${APPROOT}/.release/debian/files
@@ -87,7 +94,7 @@ function_dispatch() {
     function_remove_releasefiles
 
     # now package it
-    cd ${BUILDPATH}
+    cd ${DEPLOYPATH}
 
     #user hook deb_pre
     function_exists function_deb_pre && function_deb_pre
@@ -97,7 +104,7 @@ function_dispatch() {
     gzip --best debian/usr/share/doc/${DEBNAME}/changelog.DEBIAN
     fn_dialog_info "Building debian package"
     fakeroot dpkg-deb --build ./debian 1> /dev/null 2>> ${ERRORLOG}
-    DEBFILE=${BUILDPATH}/${DEBNAME}_${RELEASETAG}_${ARCHITECTURE}.deb
+    DEBFILE=${DEPLOYPATH}/${DEBNAME}_${RELEASETAG}_${ARCHITECTURE}.deb
     mv debian.deb ${DEBFILE}
 
     #user func

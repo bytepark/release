@@ -35,14 +35,14 @@ function_post_source() {
     fi
 
     # go to the temporary directory
-    function_create_tempdir
+    function_create_builddir
 
     if [ ${GITREVISION_BRANCH} ]; then
         RELEASETAG=${DATESHORT}_${RELEASETAG}
     fi
 
-    OUTPUTFILE=${BUILDPATH}/${RPMNAME}-${RELEASETAG}.tar.gz
-    BUILD_CONFIG_DIR="${BUILDPATH}/${RPMNAME}-${RELEASETAG}/.release/rpm"
+    OUTPUTFILE=${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}.tar.gz
+    BUILD_CONFIG_DIR="${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}/.release/rpm"
 }
 
 function_dispatch() {
@@ -68,18 +68,25 @@ function_dispatch() {
     #user func hook
     function_exists function_clone_post && function_clone_post
 
+    function_exists function_build_workspace && function_build_workspace
+
+    cp -R ${WORKSPACEPATH}/* ${DEPLOYPATH}
+    cd ${DEPLOYPATH}
+
+    function_exists function_build_deploy && function_build_deploy
+
     # no more git after here
     function_remove_gitfiles
 
     # save the specfile before cleanup
-    cp ${BUILD_CONFIG_DIR}/$SPECFILE ${BUILDPATH}/$SPECFILE
+    cp ${BUILD_CONFIG_DIR}/$SPECFILE ${DEPLOYPATH}/$SPECFILE
     # @todo - exit, if no specfile found
 
     # auto cleanup
     function_remove_releasefiles
 
     # create tarball
-    cd ${BUILDPATH}
+    cd ${DEPLOYPATH}
     fn_dialog_waitingbox "tar -c ${RPMNAME}-${RELEASETAG} | gzip -c > ${OUTPUTFILE}" "Creating tarball for rpm build"
 
     # user func hook
@@ -94,7 +101,7 @@ function_dispatch() {
 
     if [ "${UPDATEREPO}" = "Yes" ]; then
         fn_dialog_info "Publishing release on yum repo server"
-        scp ${BUILDPATH}/${RPMNAME}-${RELEASETAG}*.rpm $YUMREPOUSER@$YUMREPOHOST:$YUMREPOPATH/$RPMNAME 1> /dev/null 2>> ${ERRORLOG}
+        scp ${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}*.rpm $YUMREPOUSER@$YUMREPOHOST:$YUMREPOPATH/$RPMNAME 1> /dev/null 2>> ${ERRORLOG}
         ssh $YUMREPOUSER@$YUMREPOHOST "createrepo --update $YUMREPOPATH" 1> /dev/null 2>> ${ERRORLOG}
 
         # TESTING. FIXME. REMOVE THIS!
@@ -105,18 +112,18 @@ function_dispatch() {
         function_exit_if_remotefile_does_not_exist "$YUMREPOUSER@$YUMREPOHOST" "$YUMREPOPATH/$RPMNAME/${RPMNAME}-${RELEASETAG}*.rpm"
 
         # Exit if file was not uploaded completely (different fize sizes).
-        function_exit_if_localfile_and_remotefile_not_same_size "${BUILDPATH}/${RPMNAME}-${RELEASETAG}*.rpm" "$YUMREPOUSER@$YUMREPOHOST" "$YUMREPOPATH/$RPMNAME/${RPMNAME}-${RELEASETAG}*.rpm"
+        function_exit_if_localfile_and_remotefile_not_same_size "${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}*.rpm" "$YUMREPOUSER@$YUMREPOHOST" "$YUMREPOPATH/$RPMNAME/${RPMNAME}-${RELEASETAG}*.rpm"
 
         METHOD_CUSTOM_COMPLETE="\n\nThe rpm package ist published in the yum repository "
     else
-        mv ${BUILDPATH}/${RPMNAME}-${RELEASETAG}*.rpm ${PROJECTPATH}
+        mv ${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}*.rpm ${PROJECTPATH}
         METHOD_CUSTOM_COMPLETE="\n\nThe rpm package file is located in your current directory"
     fi
 }
 
 method_post_gitbranch_pull() {
     fn_dialog_info "Setting Release in spec and pushing to repository."
-    FILE=${BUILDPATH}/${RPMNAME}-${RELEASETAG}/.release/rpm/$SPECFILE
+    FILE=${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}/.release/rpm/$SPECFILE
     awk '/Release:/ { sub(/[0-9]+/, int(substr($0, match($0, /[0-9]+/), length()))+1)};{ print }' ${FILE} > $FILE.new
     mv $FILE.new $FILE
     git add -u 1> /dev/null 2>> ${ERRORLOG}
@@ -125,7 +132,7 @@ method_post_gitbranch_pull() {
 }
 
 method_post_gittag_checkout() {
-    FILE=${BUILDPATH}/${RPMNAME}-${RELEASETAG}/.release/rpm/$SPECFILE
+    FILE=${DEPLOYPATH}/${RPMNAME}-${RELEASETAG}/.release/rpm/$SPECFILE
     awk '/Release:/ { sub(/[0-9]+/, int(substr($0, match($0, /[0-9]+/), length()))+1)};{ print }' ${FILE} > $FILE.new
     mv $FILE.new $FILE
     git add -u 1> /dev/null 2>> ${ERRORLOG}
@@ -139,7 +146,7 @@ method_build_remote() {
     ssh $BUILD_HOST_USER@$BUILD_HOST "rm -f $BUILD_HOST_PATH/${SPECFILE}; rm -f $BUILD_HOST_PATH/rpmbuild/SOURCES/$RPMNAME*; rm -Rf $BUILD_HOST_PATH/rpmbuild/BUILD/$RPMNAME*" 1> /dev/null 2>> ${ERRORLOG}
     # put the tar and spec file on the vm
     scp $OUTPUTFILE $BUILD_HOST_USER@$BUILD_HOST:$BUILD_HOST_PATH/rpmbuild/SOURCES/ 1> /dev/null 2>> ${ERRORLOG}
-    scp ${BUILDPATH}/$SPECFILE $BUILD_HOST_USER@$BUILD_HOST:$BUILD_HOST_PATH 1> /dev/null 2>> ${ERRORLOG}
+    scp ${DEPLOYPATH}/$SPECFILE $BUILD_HOST_USER@$BUILD_HOST:$BUILD_HOST_PATH 1> /dev/null 2>> ${ERRORLOG}
     # ... and build
     ssh $BUILD_HOST_USER@$BUILD_HOST "cd $BUILD_HOST_PATH; rpmbuild -bb $SPECFILE;" 1> /dev/null 2>> ${ERRORLOG}
     # clean up
@@ -148,7 +155,7 @@ method_build_remote() {
 }
 
 method_build_local() {
-    cd ${BUILDPATH}
+    cd ${DEPLOYPATH}
     mkdir -p ~/rpmbuild/SOURCES
     cp $OUTPUTFILE ~/rpmbuild/SOURCES
     fn_dialog_progressbox "rpmbuild -bb ${SPECFILE} 2>> ${ERRORLOG}"
@@ -158,5 +165,5 @@ method_build_local() {
         exit 1
     fi
 
-    cp $RPM ${BUILDPATH}
+    cp $RPM ${DEPLOYPATH}
 }

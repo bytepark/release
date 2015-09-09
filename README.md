@@ -20,6 +20,16 @@ There is currently a dependency to "dialog" - in order to show interface widgets
 
 The release manager when invoked without further arguments enters interactive mode.
 
+## Workspace support
+
+The tool now supports a permanent workspace to enhance the speed of releases. In the base working directory another directory layer is added. The new directories are __workspace__ and __build__.
+  
+_git_ now performs either a pull or a clone depending on whether the workspace already exists. 
+
+Two new function hooks are introduced. __function_build_workspace__ and __function_build_deploy__. These are to replace __function_clone_post__. All actions to take that should last between relases, i.e. `composer install --no-dev` or `npm run build`, must be located in __function_build_workspace__. The release specific and cleanup actions must be located in __function_build_deploy__.
+
+To enforce the changes in the specific release configuration, the new variable CONFIG_VERSION is tested for existence and the value _2_. If not set or not set to _2_ the tool will exit with a corresponding error message.
+
 ## Options
 
 By executing ./release.sh -h you receive the full list of options
