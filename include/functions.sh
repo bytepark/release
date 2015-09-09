@@ -150,12 +150,12 @@ loadConfiguration() {
     . ${PROJECT_CONFIG_DIR}/${configFile}
 
     if [ -z $RELEASE_CONFIG_VERSION ]; then
-        view_error "Deprecated. RTFM for the update of your configuration."
+        view_error "Deprecated. Please see the documentation to update your configuration."
         exit 41
     fi
 
     if [ -n $RELEASE_CONFIG_VERSION -a $RELEASE_CONFIG_VERSION -lt 3 ]; then
-        view_error "Deprecated. RTFM for the update of your configuration."
+        view_error "Deprecated. Please see the documentation to update your configuration."
         exit 41
     fi
 }
