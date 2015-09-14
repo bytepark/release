@@ -117,12 +117,6 @@ setup() {
     assert_status 41
 }
 
-@test "[functions] loadConfiguration exits with error code 41 when an old release configuration is called" {
-    run loadConfiguration "rpm" "test"
-
-    assert_status 41
-}
-
 @test "[functions] loadConfiguration exits with error code 40 and message on failure" {
     run loadConfiguration "deb" "wrong-target"
 

@@ -247,6 +247,7 @@ askForTarget() {
             view_error "Unsupported menu choice"
             exit 30
         fi
+        let targetKey=2*$targetKey-1
     fi
     releaseTarget=${targetsArray[$targetKey]}
 }
