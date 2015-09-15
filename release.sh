@@ -49,8 +49,11 @@ release() {
         local availableTargetsArray=$(echo ${availableTargets[@]})
         askForTarget "${availableTargetCount}" "${availableTargets}"
     fi
-    ## load the project secific configuration (from .release)
+    # load the project secific configuration (from .release)
     loadConfiguration ${releaseMethod} ${releaseTarget}
+
+    # setup the origin
+    setupOrigin
     #
     ## function for git setup (tag/branch)
     #    function_setup_git
