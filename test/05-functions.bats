@@ -10,42 +10,6 @@ setup() {
     load $BATS_TEST_DIRNAME/../include/bootstrap.sh
 }
 
-@test "[functions] guardEmptyOrExitWithError returns 0 on success" {
-    run guardEmptyOrExitWithError "" 1 "NON EMPTY"
-
-    assert_success
-}
-
-@test "[functions] guardEmptyOrExitWithError exits with error code and message on guard failure" {
-    run guardEmptyOrExitWithError "A" 1 "NON EMPTY"
-
-    assert_failure "NON EMPTY"
-}
-
-@test "[functions] guardNonEmptyOrExitWithError returns 0 on success" {
-    run guardNonEmptyOrExitWithError "non empty" 1 "EMPTY"
-
-    assert_success
-}
-
-@test "[functions] guardNonEmptyOrExitWithError exits with error code and message on guard failure" {
-    run guardNonEmptyOrExitWithError "" 1 "EMPTY"
-
-    assert_failure "EMPTY"
-}
-
-@test "[functions] guardSuccessfulCallOrExitWithError returns 0 on success" {
-    run guardSuccessfulCallOrExitWithError "ls" 1 "EXEC FAILED"
-
-    assert_success
-}
-
-@test "[functions] guardSuccessfulCallOrExitWithError exits with error code and message on guard failure" {
-    run guardSuccessfulCallOrExitWithError "ls-this-should-fail" 1 "EXEC FAILED"
-
-    assert_failure "EXEC FAILED"
-}
-
 @test "[functions] checkForTool returns 0 when program is present " {
     run checkForTool "bats"
 

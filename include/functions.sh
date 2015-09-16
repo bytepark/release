@@ -10,47 +10,6 @@
 # Global functions for the release script
 
 #
-# Checks the first parameter for emptyness and exits with the given
-# error code and message on failing
-#
-guardEmptyOrExitWithError() {
-    if [ ! -z "${1}" ]; then
-        view_error "${3}"
-        exit $2
-    fi
-
-    return 0
-}
-
-#
-# Checks the first parameter for non-emptyness and exits with the given
-# error code and message on failing
-#
-guardNonEmptyOrExitWithError() {
-    if [ -z "${1}" ]; then
-        view_error "${3}"
-        exit $2
-    fi
-
-    return 0
-}
-
-#
-# Executes the first parameter and exits with the given
-# error code and message on failing
-#
-guardSuccessfulCallOrExitWithError() {
-   `${1} > /dev/null 2>&1`
-
-   if [ $? -ne 0 ]; then
-        view_error "${3}"
-        exit $2
-    fi
-
-    return 0
-}
-
-#
 # Checks if the given commands are present on the system
 #
 # Exits with error code 20 when commands are not present

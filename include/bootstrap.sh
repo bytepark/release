@@ -25,6 +25,7 @@ REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir r
 # source the base functionality
 . ${releaseIncludepath}/util.sh
 . ${releaseIncludepath}/view.sh
+. ${releaseIncludepath}/guard.sh
 . ${releaseIncludepath}/functions.sh
 
 checkForTools $REQUIRED_TOOLS
