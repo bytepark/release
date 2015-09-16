@@ -20,7 +20,7 @@ So to install the release manager issue the following commands:
 
 ## Introduction
 
-The bytepark release manager is a Bash shell script that provides different ways of releasing project files. Currently the following methods are available:
+The bytepark release manager is a collection of Bash shell script that provides different ways of releasing project files. Currently the following methods are available:
 
 * rsync - rsync of files to target system
 * tarball - generates a gzipped tarball
