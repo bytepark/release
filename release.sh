@@ -54,7 +54,7 @@ release() {
 
     # setup the origin
     local originToLoad=${ORIGIN}
-    setupOrigin ${originToload}
+    setupOrigin ${originToLoad}
     #
     ## function for git setup (tag/branch)
     #    function_setup_git
