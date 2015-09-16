@@ -14,7 +14,7 @@ The bytepark release manager is a Bash shell script that provides different ways
 * deb - generates a deb package
 * dump - the inversion of deploy (we get a live copy into our development setup)
 
-There is currently a dependency to "dialog" - in order to show interface widgets in interactive mode.
+There is an optional dependency to "dialog" - in order to show interface widgets in interactive mode.
 
 ## Programm invocation
 
