@@ -20,7 +20,7 @@
 # VIEW_WAITING
 # VIEW_PROGRESS
 #
-# The view implentation have to reside in the view subdirectory
+# The view implentations have to reside in the view subdirectory
 #
 
 # Try dialog when view is not set
