@@ -53,7 +53,8 @@ release() {
     loadConfiguration ${releaseMethod} ${releaseTarget}
 
     # setup the origin
-    setupOrigin
+    local originToLoad=${ORIGIN}
+    setupOrigin ${originToload}
     #
     ## function for git setup (tag/branch)
     #    function_setup_git

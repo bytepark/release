@@ -35,3 +35,7 @@ The release manager can exit with several codes
 
 50 File not found
 51 Directory not found
+
+### Origin
+
+60 Origin is not available
