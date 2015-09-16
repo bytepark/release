@@ -21,7 +21,7 @@ parseForOptions() {
     wizard through the release.\n
     \n
     Available options:\n
-    \t-m\tthe method to use [deploy,tarball,rpm,deb,dump]\n
+    \t-m\tthe method to use [rsync,tarball,rpm,deb,dump]\n
     \t-t\tthe target system\n
     \t-b\toptional git branch to release\n
     \t-r\toptional git tag to release\n

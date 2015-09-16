@@ -20,13 +20,13 @@ So to install the release manager issue the following commands:
 
 ## Introduction
 
-The bytepark release manager is a Bash shell script that provides different ways of deploying files. Currently the following methods are available:
+The bytepark release manager is a Bash shell script that provides different ways of releasing project files. Currently the following methods are available:
 
-* deploy - synchronisation of the files from development (in house) with the target system
+* rsync - rsync of files to target system
 * tarball - generates a gzipped tarball
 * rpm - generates a rpm package
 * deb - generates a deb package
-* dump - the inversion of deploy (we get a live copy into our development setup)
+* dump - the inversion of rsync (we get a live copy into our development setup)
 
 There is an optional dependency to "dialog" - in order to show interface widgets in interactive mode.
 
@@ -46,7 +46,7 @@ By executing ./release.sh -h you receive the full list of options
     wizard through the release.
  
     Available options:
-    -m  the method to use [deploy,tarball,rpm,deb,dump] 
+    -m  the method to use [rsync,tarball,rpm,deb,dump] 
     -t  the target system
     -b  optional git branch to release
     -r  optional git tag to release
