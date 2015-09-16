@@ -4,6 +4,20 @@ release
 ## Status
 [![alt text][2]][1]
 
+## Installation
+
+The bytepark release manager should be installed - at the moment - as a clone of a 2.x tag.
+
+The current stable tag from the 2.0 branch is __2.0.0__.
+
+The release manager __SHOULD__ never be invoked as clone of the master branch!
+
+So to install the release manager issue the following commands:
+
+    git clone -b 2.0 https://github.com/bytepark/release.git <target_directory>
+    cd <target_directory>
+    git checkout 2.0.0
+
 ## Introduction
 
 The bytepark release manager is a Bash shell script that provides different ways of deploying files. Currently the following methods are available:
