@@ -619,6 +619,9 @@ function_git_dispatch() {
 
     if [ -n "${GITREVISION_BRANCH}" -a "master" != "${GITREVISION}" ]; then
         fn_dialog_progressbox "git checkout ${GITREVISION}" "Checkout of branch ${GITREVISION}"
+        fn_dialog_progressbox "git pull origin ${GITREVISION}" "Pulling latest changes of branch ${GITREVISION}"
+    else
+        fn_dialog_progressbox "git pull origin master" "Pulling latest changes of branch ${GITREVISION}"
     fi
 
     # hook for master branch actions after branch pull
