@@ -52,6 +52,11 @@ function_determine_os() {
         OS="fedora"
         OSPKG="rpm"
     fi
+    grep "scientific" /etc/issue -i -q
+    if [ $? = '0' ];then
+        OS="centos"
+        OSPKG="rpm"
+    fi
     grep "debian" /etc/issue -i -q
     if [ $? = '0' ];then
         OS="debian"
