@@ -24,7 +24,7 @@ METHOD_LABELS=( "Make a rsync deploy to a remote site", "Build a gzipped tarball
 # function to check for needed tools
 #
 function_check_tools() {
-    TOOLS='basename clear cut dirname expr find git getopts grep ls mkdir rm rsync sed ssh tr tac'
+    TOOLS='basename clear cut dirname expr find git getopts grep iconv ls mkdir rm rsync sed ssh tr tac'
 
     for prog in ${TOOLS}; do
         if [ ! `command -v ${prog}` ]; then

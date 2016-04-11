@@ -19,6 +19,11 @@ function_post_source() {
             exit
         fi
     fi
+
+    OPT_RSYNC_ICONV=""
+    if [ -n ${RSYNC_ENC_LOCAL+1} ] && [ -n ${RSYNC_ENC_REMOTE+1} ]; then
+        OPT_RSYNC_ICONV="--iconv=${RSYNC_ENC_LOCAL},${RSYNC_ENC_REMOTE}"
+    fi
 }
 
 function_dispatch() {
@@ -35,7 +40,7 @@ function_dispatch() {
     function_mysqldump_remote
 
     # synchronize files
-    fn_dialog_progressbox "rsync -q --delete ${OPT_RSYNC_EXCLUDE} -az -e \"ssh -p ${SSHPORT}\" $SSHUSER@$SSHHOST:$REMOTEPATH ."
+    fn_dialog_progressbox "rsync -q ${OPT_RSYNC_ICONV} --delete ${OPT_RSYNC_EXCLUDE} -az -e \"ssh -p ${SSHPORT}\" $SSHUSER@$SSHHOST:$REMOTEPATH ."
 
     #user func
     function_exists function_rsync_post && function_rsync_post
