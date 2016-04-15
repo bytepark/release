@@ -34,7 +34,8 @@ function_dispatch() {
         exit
     fi
 
-    if [ -z $SKIP_IMPORT && ! function_exists function_import_dumps ]; then
+    function_exists function_import_dumps
+    if [ -z $SKIP_IMPORT ] && [ $? -ne 0 ]; then
         fn_dialog_error "Please implement a function_import_dumps or set SKIP_IMPORT=1 in your release config!"
         exit
     fi
@@ -44,7 +45,7 @@ function_dispatch() {
         SSHPORT=22
     fi
 
-    if [ ! -z $SKIP_IMPORT ]; then
+    if [ -z $SKIP_IMPORT ]; then
         function_import_dumps
     fi
 
