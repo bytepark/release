@@ -10,7 +10,7 @@
 
 parseForOptions() {
     # issue
-    local issue="bytepark release manager - ${SCRIPT_VERSION}"
+    local issue="bytepark release manager - ${RELEASE_VERSION}"
     # Help text
     local help="${issue}\n
     \n
