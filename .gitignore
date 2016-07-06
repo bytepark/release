@@ -1,11 +1,6 @@
-*.log
-*~
-.project
-.buildpath
-.settings
-.settings/*
-.vagrant
-.idea/*
+# Please put editor/ide specific files and directories in your global
+# .gitignore file
+
 /.release
 
 !.gitignore

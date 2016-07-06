@@ -7,4 +7,4 @@
 # Please see the README file for further information.
 # See the license information in the bundled LICENSE file.
 #
-# Origin of the subject to releasse resides in git
+# Origin of the subject to release resides in git

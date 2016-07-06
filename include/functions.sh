@@ -92,7 +92,7 @@ parseProjectPath() {
 }
 
 #
-# Loads the release configuration definied by given values
+# Loads the release configuration defined by given values
 #
 # @param method
 # @param target
@@ -120,7 +120,7 @@ loadConfiguration() {
 }
 
 #
-# parses the configuration files
+# Parses the configuration files
 #
 parseConfiguredMethods() {
     local configFileName

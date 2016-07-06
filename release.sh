@@ -24,10 +24,10 @@ release() {
     # where are we located
     local releasePath=$(normalizedPath "$0")
     if [ "${releasePath}" = "/usr/bin" ]; then
-            releasePath=/usr/local/lib/release
+        releasePath=/opt/release
     fi
     if [ "${releasePath}" = "/usr/local/bin" ]; then
-            releasePath=/opt/release
+        releasePath=/usr/local/lib/release
     fi
     local releaseIncludePath="${releasePath}/include"
     local releaseMethod
@@ -49,12 +49,14 @@ release() {
         local availableTargetsArray=$(echo ${availableTargets[@]})
         askForTarget "${availableTargetCount}" "${availableTargets}"
     fi
-    # load the project secific configuration (from .release)
+    # load the project specific configuration (from .release)
     loadConfiguration ${releaseMethod} ${releaseTarget}
 
     # setup the origin
     local originToLoad=${ORIGIN}
     setupOrigin ${originToLoad}
+
+
     #
     ## function for git setup (tag/branch)
     #    function_setup_git

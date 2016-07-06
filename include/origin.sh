@@ -14,7 +14,7 @@
 #
 # ORIGIN_SETUP
 #
-# The origin implentations have to reside in the origin subdirectory
+# The origin implementations have to reside in the origin subdirectory
 #
 
 setupOrigin () {
