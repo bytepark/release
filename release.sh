@@ -10,7 +10,7 @@
 # Started 07/2011 as a rsync wrapper script ;-)
 #
 
-RELEASE_VERSION="3.0.0-alpha-1"
+RELEASE_VERSION="4.0.0-alpha-1"
 
 normalizedPath() {
 if [ -h $1 ]; then
