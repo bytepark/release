@@ -480,11 +480,11 @@ function_mysql_dump() {
 # creates a temporary directory
 #
 function_create_builddir() {
-    FOLDER=temp_${USER}_${REPO}_${TARGET_NAME}
-    WORKSPACEPATH="/tmp/${FOLDER}/workspace"
-    DEPLOYPATH="/tmp/${FOLDER}/build"
+    FOLDER=${REPO}_${TARGET_NAME}
+    WORKSPACEPATH="/home/${USER}/.bytepark-release/${FOLDER}/workspace"
+    DEPLOYPATH="/home/${USER}/.bytepark-release/${FOLDER}/build"
 
-    cd /tmp/
+    cd /home/${USER}/.bytepark-release/
 
     # delete old temp folder, if exists
     if [ -d ${WORKSPACEPATH} ]; then
