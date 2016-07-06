@@ -2,7 +2,7 @@
 #
 # bytepark release manager
 #
-# (c) 2011-2015 bytepark GmbH
+# (c) 2011-2016 bytepark GmbH
 #
 # Please see the README file for further information.
 # See the license information in the bundled LICENSE file.
@@ -24,17 +24,17 @@ release() {
     # where are we located
     local releasePath=$(normalizedPath "$0")
     if [ "${releasePath}" = "/usr/bin" ]; then
-            releasePath=/var/release
+            releasePath=/usr/local/lib/release
     fi
     if [ "${releasePath}" = "/usr/local/bin" ]; then
             releasePath=/opt/release
     fi
-    local releaseIncludepath="${releasePath}/include"
+    local releaseIncludePath="${releasePath}/include"
     local releaseMethod
     local releaseTarget
 
     # bootstrap and base sourcing
-    . ${releaseIncludepath}/bootstrap.sh
+    . ${releaseIncludePath}/bootstrap.sh
 
     # Not in batch mode, i.e. we have to ask for the method and target
     if [ $inBatchMode -eq 0 ]; then

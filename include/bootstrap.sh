@@ -2,7 +2,7 @@
 #
 # bytepark release manager - bootstrap.sh
 #
-# (c) 2011-2015 bytepark GmbH
+# (c) 2011-2016 bytepark GmbH
 #
 # Please see the README file for further information.
 # See the license information in the bundled LICENSE file.
@@ -23,17 +23,17 @@ PROJECT_CONFIG_DIR=""
 REQUIRED_TOOLS="basename clear cut dirname expr find git getopts grep ls mkdir rm rsync sed ssh tr tac"
 
 # source the base functionality
-. ${releaseIncludepath}/util.sh
-. ${releaseIncludepath}/view.sh
-. ${releaseIncludepath}/guard.sh
-. ${releaseIncludepath}/functions.sh
+. ${releaseIncludePath}/util.sh
+. ${releaseIncludePath}/view.sh
+. ${releaseIncludePath}/guard.sh
+. ${releaseIncludePath}/functions.sh
 
 checkForTools $REQUIRED_TOOLS
 initializeProject
 
-. ${releaseIncludepath}/getopts.sh
+. ${releaseIncludePath}/getopts.sh
 
 parseForOptions $@
 
-. ${releaseIncludepath}/method.sh
-. ${releaseIncludepath}/origin.sh
+. ${releaseIncludePath}/method.sh
+. ${releaseIncludePath}/origin.sh

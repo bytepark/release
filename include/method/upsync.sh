@@ -1,9 +1,14 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 #
-# script to do a upsync to a remote site
-# (c) bytepark GmbH, 2015
-# v0.1
+# bytepark release manager - upsync.sh
+#
+# (c) 2011-2016 bytepark GmbH
+#
+# Please see the README file for further information.
+# See the license information in the bundled LICENSE file.
+#
+# method upsync
+
 function_post_source() {
     RSYNC_FILES_DIR="${PROJECT_CONFIG_DIR}/rsync"
 

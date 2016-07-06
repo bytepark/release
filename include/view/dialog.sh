@@ -1,7 +1,7 @@
 #
 # bytepark release manager - view/dialog.sh
 #
-# (c) 2011-2015 bytepark GmbH
+# (c) 2011-2016 bytepark GmbH
 #
 # Please see the README file for further information.
 # See the license information in the bundled LICENSE file.

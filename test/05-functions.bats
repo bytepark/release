@@ -4,7 +4,7 @@ load $BATS_TEST_DIRNAME/test_helper.sh
 
 setup() {
     releasePath="${BATS_TEST_DIRNAME}/.."
-    releaseIncludepath="${releasePath}/include"
+    releaseIncludePath="${releasePath}/include"
 
     concreteView="prompt"
     load $BATS_TEST_DIRNAME/../include/bootstrap.sh

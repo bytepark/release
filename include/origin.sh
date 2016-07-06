@@ -2,7 +2,7 @@
 #
 # bytepark release manager - origin.sh
 #
-# (c) 2011-2015 bytepark GmbH
+# (c) 2011-2016 bytepark GmbH
 #
 # Please see the README file for further information.
 # See the license information in the bundled LICENSE file.
@@ -19,12 +19,12 @@
 
 setupOrigin () {
     local origin=$1
-    if [ ! -f "${releaseIncludepath}/origin/${origin}.sh" ]; then
+    if [ ! -f "${releaseIncludePath}/origin/${origin}.sh" ]; then
         view_error "The origin '${origin}' is not available"
         exit 60
     fi
 
-    . ${releaseIncludepath}/origin/${origin}.sh
+    . ${releaseIncludePath}/origin/${origin}.sh
 
     $ORIGIN_SETUP
 }

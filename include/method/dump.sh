@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function_post_source() {
     RSYNC_FILES_DIR="${PROJECT_CONFIG_DIR}/rsync"
