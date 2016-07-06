@@ -6,17 +6,17 @@ release
 
 ## Installation
 
-The bytepark release manager should be installed - at the moment - as a clone of a 2.x tag.
+The bytepark release manager should be installed - at the moment - as a clone of a 3.x tag.
 
-The current stable tag from the 2.0 branch is __2.0.0__.
+The current stable tag is __3.0.0__.
 
 The release manager __SHOULD__ never be invoked as clone of the master branch!
 
 So to install the release manager issue the following commands:
 
-    git clone -b 2.0 https://github.com/bytepark/release.git <target_directory>
+    git clone -b 3.0 https://github.com/bytepark/release.git <target_directory>
     cd <target_directory>
-    git checkout 2.0.0
+    git checkout 3.0.0
 
 ## Introduction
 
