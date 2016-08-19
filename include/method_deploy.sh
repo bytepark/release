@@ -33,7 +33,7 @@ function_dispatch() {
     function_exists function_clone_pre && function_clone_pre
 
     # get the repo
-    function_git_dispatch "${RELEASETAG}"
+    function_git_dispatch "${REPO}_${TARGET_NAME}"
 
     #user func hook
     function_exists function_clone_post && function_clone_post
@@ -41,7 +41,7 @@ function_dispatch() {
     function_exists function_build_workspace && function_build_workspace
 
     cp -R ${WORKSPACEPATH}/* ${DEPLOYPATH}
-    cd "${DEPLOYPATH}/${RELEASETAG}"
+    cd "${DEPLOYPATH}"
 
     function_exists function_build_deploy && function_build_deploy
 
