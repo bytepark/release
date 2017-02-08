@@ -34,7 +34,7 @@ To enforce the changes in the specific release configuration, the new variable C
 
 By executing ./release.sh -h you receive the full list of options
 
-    bytepark release manager - %VERSION% 
+    bytepark release manager - $VERSION 
       Usage: release [OPTIONS]
  
     When OPTIONS is omitted the release manager executes
