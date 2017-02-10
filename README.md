@@ -16,7 +16,7 @@ So to install the release manager issue the following commands:
 
     git clone -b 3.0 https://github.com/bytepark/release.git <target_directory>
     cd <target_directory>
-    git checkout 3.0.4
+    git checkout 3.0.5
 
 ## Introduction
 
