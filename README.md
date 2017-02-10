@@ -8,7 +8,7 @@ release
 
 The bytepark release manager should be installed - at the moment - as a clone of a 3.x tag.
 
-The current stable tag is __3.0.5__.
+The current stable tag is __3.0.6__.
 
 The release manager __SHOULD__ never be invoked as clone of the master branch!
 
@@ -16,7 +16,7 @@ So to install the release manager issue the following commands:
 
     git clone -b 3.0 https://github.com/bytepark/release.git <target_directory>
     cd <target_directory>
-    git checkout 3.0.5
+    git checkout 3.0.6
 
 ## Introduction
 
