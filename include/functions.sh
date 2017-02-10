@@ -487,7 +487,7 @@ function_create_builddir() {
     cd /home/${USER}/.bytepark-release/
 
     # delete old temp folder, if exists
-    if [ -d "${WORKSPACEPATH}/.git" ]; then
+    if [ -d ${WORKSPACEPATH} ]; then
         GIT_PULL=1
         rm -Rf ${DEPLOYPATH}/*
     else
