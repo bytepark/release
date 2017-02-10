@@ -8,7 +8,7 @@ release
 
 The bytepark release manager should be installed - at the moment - as a clone of a 3.x tag.
 
-The current stable tag is __3.0.4__.
+The current stable tag is __3.0.5__.
 
 The release manager __SHOULD__ never be invoked as clone of the master branch!
 
