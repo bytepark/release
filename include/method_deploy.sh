@@ -61,38 +61,46 @@ function_dispatch() {
         fn_dialog_error "Something seems to have gone wrong while doing git clone. Temp Directory seems rather empty. You'd better have a look for yourself."
         exit
     fi
+    if [ -z $RSYNC_KEEP_DRY_RUN_LOG ]; then
+        RSYNC_KEEP_DRY_RUN_LOG=0
+    fi
 
     fn_dialog_info "rsync"
     if [ "$RSYNC_DO_DRY_RUN" = "1" ]; then
-		if [ $REMOTESUDO ]; then
-			rsync --rsync-path="sudo rsync" --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant --exclude=backup/ ${OPT_RSYNC_EXCLUDE} -avzn -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH > /tmp/rsync-output
-		else
-			rsync --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=backup/ --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant ${OPT_RSYNC_EXCLUDE} -avzn -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH > /tmp/rsync-output
-		fi
+        if [ $REMOTESUDO ]; then
+            rsync --rsync-path="sudo rsync" --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant --exclude=backup/ ${OPT_RSYNC_EXCLUDE} -avzn -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH > /tmp/rsync-output
+        else
+            rsync --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=backup/ --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant ${OPT_RSYNC_EXCLUDE} -avzn -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH > /tmp/rsync-output
+        fi
 
-		DELETECOUNT=$(grep -c "deleting" /tmp/rsync-output)
-		sed -i '/deleting/b;/.*/d' /tmp/rsync-output
-		if ! [ -z $RSYNC_DONT_DELETE_MORE_THAN ]; then
-			if [ "$DELETECOUNT" -gt "$RSYNC_DONT_DELETE_MORE_THAN" ]; then
-				fn_dialog_error "Aborting. Too much deletions. Rsync configuration may be wrong. See /tmp/rsync-output."
-				clear
-				exit
-			fi
-		fi
-		fn_dialog_yesorno "Rsync will delete ${DELETECOUNT} Files(output in /tmp/rsync-output). Proceed with Rsync?"
-		if [ "$RETURN" = "0" ]; then
-			fn_dialog_info "Aborting."
-			clear
-			exit
-		fi
-	else
-		rm -f /tmp/rsync-output
-	fi
+        if [ "${RSYNC_KEEP_DRY_RUN_LOG}" != "0" ]; then
+            DATESHORT=`/bin/date +"%Y%m%d%H%M"`
+            cp /tmp/rsync_output ${PROJECTPATH}/${DATESHORT}.rsync.log
+        fi
+
+        DELETECOUNT=$(grep -c "deleting" /tmp/rsync-output)
+        sed -i '/deleting/b;/.*/d' /tmp/rsync-output
+        if ! [ -z $RSYNC_DONT_DELETE_MORE_THAN ]; then
+            if [ "$DELETECOUNT" -gt "$RSYNC_DONT_DELETE_MORE_THAN" ]; then
+                fn_dialog_error "Aborting. Too much deletions. Rsync configuration may be wrong. See /tmp/rsync-output."
+                clear
+                exit
+            fi
+        fi
+        fn_dialog_yesorno "Rsync will delete ${DELETECOUNT} Files(output in /tmp/rsync-output). Proceed with Rsync?"
+        if [ "$RETURN" = "0" ]; then
+            fn_dialog_info "Aborting."
+            clear
+            exit
+        fi
+    else
+        rm -f /tmp/rsync-output
+    fi
     if [ $REMOTESUDO ]; then
         rsync --rsync-path="sudo rsync" -q --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant --exclude=backup/ ${OPT_RSYNC_EXCLUDE} -avz -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH 1> /dev/null 2>> ${ERRORLOG}
     else
         #rsync -q --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=backup/ --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant ${OPT_RSYNC_EXCLUDE} -avz -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH
-    rsync -q --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=backup/ --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant ${OPT_RSYNC_EXCLUDE} -avz -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH 1> /dev/null 2>> ${ERRORLOG}
+        rsync -q --delete --exclude=.release --exclude=.ssh --exclude=.gitignore --exclude=.git --exclude=backup/ --exclude=.puppet --exclude=Vagrantfile --exclude=.vagrant ${OPT_RSYNC_EXCLUDE} -avz -e "ssh -p ${SSHPORT}" . $SSHUSER@$SSHHOST:$REMOTEPATH 1> /dev/null 2>> ${ERRORLOG}
     fi
 
     #user func
