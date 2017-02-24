@@ -3,7 +3,7 @@
 #
 # this script implements the bytepark release manager
 #
-VERSION="3.0.6"
+VERSION="3.0.8"
 
 #
 # bytepark release manager

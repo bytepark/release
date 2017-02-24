@@ -2,21 +2,16 @@
 
 function_post_source() {
     RSYNC_FILES_DIR="${CONFIG_DIR}/rsync"
+    OPT_RSYNC_EXCLUDE=""
 
     # check whether a rsync_exclude exists
     if [ -z $RSYNC_EXCLUDE ] && [ -d "${RSYNC_FILES_DIR}" ]; then
         if [ -f ${RSYNC_FILES_DIR}/exclude_${TARGET_NAME}.conf ]; then
             OPT_RSYNC_EXCLUDE=" --exclude-from=${RSYNC_FILES_DIR}/exclude_${TARGET_NAME}.conf "
-        else
-            fn_dialog_error "No rsync exclude file found in directory '.release/rsync'.\n\nThe release tool has changed some directory and file locations as well as some variable names.\nRefer to https://faq.bytenetz.de/development/release-tool/.\n\nAborting."
-            exit
         fi
     else
         if [ -f ${RSYNC_FILES_DIR}/$RSYNC_EXCLUDE ]; then
             OPT_RSYNC_EXCLUDE=" --exclude-from=${RSYNC_FILES_DIR}/${RSYNC_EXCLUDE}"
-        else
-            fn_dialog_error "No rsync exclude file found in directory '.release/rsync'.\n\nThe release tool has changed some directory and file locations as well as some variable names.\nRefer to https://faq.bytenetz.de/development/release-tool/.\n\nAborting."
-            exit
         fi
     fi
 
